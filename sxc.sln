@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "sxc", "src\sxc\sxc.xproj", "{6081A246-3AFF-45A2-B480-FFC27B3C08FC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E2E3358F-ABAE-4C31-962D-E476A8F6DBF1}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		global.json = global.json
+		LICENSE = LICENSE
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FF802EBD-2920-4F41-8EBD-875A04234BF7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{65DA423B-6641-40BE-9895-8970DDC71B85}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6081A246-3AFF-45A2-B480-FFC27B3C08FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6081A246-3AFF-45A2-B480-FFC27B3C08FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6081A246-3AFF-45A2-B480-FFC27B3C08FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6081A246-3AFF-45A2-B480-FFC27B3C08FC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6081A246-3AFF-45A2-B480-FFC27B3C08FC} = {FF802EBD-2920-4F41-8EBD-875A04234BF7}
+	EndGlobalSection
+EndGlobal

@@ -7,7 +7,7 @@ _ReSharper.*/
 packages/
 artifacts/
 PublishProfiles/
-.vs/
+.vs*/
 *.user
 *.suo
 *.cache

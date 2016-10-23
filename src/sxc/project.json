@@ -1,0 +1,17 @@
+{
+    "version": "0.0.1",
+    "dependencies": {
+        
+    },
+    "buildOptions":{
+        "emitEntryPoint": true,
+        "outputName": "sxc",
+        "compile": "**.cs"
+    },
+    "runtimes":{
+        "win10-x64": {}
+    },
+    "frameworks": {
+        "net451": {}
+    }
+}
