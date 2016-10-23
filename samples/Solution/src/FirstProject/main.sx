@@ -1,0 +1,13 @@
+use Sx.Core; // Our BCL equiv 
+
+module FirstProject
+{
+    public class Program
+    {
+        public int Main()
+        {
+            let int returnCode = 0; // not sure about int? Start off we this, then we can do compiler inference after
+            return returnCode;
+        }
+    }
+}
