@@ -1,0 +1,18 @@
+﻿import Sx.Core;
+
+module ExampleModule
+{
+	public class Program
+    {
+		public int Main()
+        {
+            // This is a line comment
+            /*
+             * This is a
+             * block style comment
+             */
+            let returnCode = 2;
+            return returnCode;
+        }
+    }
+}
