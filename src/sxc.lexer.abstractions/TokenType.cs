@@ -10,7 +10,7 @@
         BlockComment,
         IntegerLiteral,
         StringLiteral,
-        FloatLiteral,
+        RealLiteral,
         Identifier,
         Keyword,
         LeftBracket, // {

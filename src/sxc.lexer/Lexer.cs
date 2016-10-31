@@ -7,9 +7,7 @@ namespace Sxc.Lexer
 {
     public class SxcLexer : ILexer
     {
-        // TODO(Dan): Expand the grammar here, possibly abstract this so we can easily pass the current grammer into this
-        //            class during instantiation to allow for fast language iteration
-        private static readonly string[] _keywords = { "import", "module", "public", "class", "let", "return" };
+        private readonly string[] _keywords;
         private StringBuilder _builder;
         private int _column;
         private int _index;
@@ -34,7 +32,6 @@ namespace Sxc.Lexer
             _column = 1;
             _sourceFileLocation = new SourceFileLocation(_column, _index, _line);
 
-            // TODO(Dan): Do the lexing...
             return TokenizeInternal();
 
         }
@@ -81,8 +78,7 @@ namespace Sxc.Lexer
             }
             else if (_ch == '.' && _next.IsDigit())
             {
-                // TODO(Dan): Need to handle decimal and doubles
-                return Float();
+                return Real();
             }
             else if (_ch.IsPunctuation())
             {
@@ -143,19 +139,10 @@ namespace Sxc.Lexer
             while (_ch.IsDigit())
                 Consume();
 
-            if (_ch == 'f' || _ch == 'F')
+            // Float
+            if (_ch == 'f' || _ch == 'F' || _ch == 'd' || _ch == 'D' || _ch == 'm' || _ch == 'M' || _ch == '.' || _ch == 'e')
             {
-                return Float();
-            }
-
-            if (_ch == 'd' || _ch == 'D')
-            {
-                return Double();
-            }
-
-            if (_ch == 'm' || _ch == 'M')
-            {
-                return Decimal();
+                return Real();
             }
 
             if (!_ch.IsWhiteSpace() && !_ch.IsPunctuation() && !_ch.IsEOF())
@@ -165,9 +152,72 @@ namespace Sxc.Lexer
 
             return CreateToken(TokenType.IntegerLiteral);
         }
-        private IToken Float()
+        private IToken Real()
         {
-            throw new NotImplementedException();
+            if (_ch == 'f' || _ch == 'F' || _ch == 'd' || _ch == 'D' || _ch == 'm' || _ch == 'M')
+            {
+                Advance();
+
+                if ((!_ch.IsWhiteSpace() && !_ch.IsPunctuation() && !_ch.IsEOF()) || _ch == '.')
+                {
+                    return Error(message: $"Remove '{_ch}' in real number.");
+                }
+
+                return CreateToken(TokenType.RealLiteral);
+            }
+
+            int preDotLength = _index - _sourceFileLocation.Index;
+
+            if (_ch == '.')
+            {
+                Consume();
+            }
+
+            while (_ch.IsDigit())
+            {
+                Consume();
+            }
+
+            if (Peak(-1) == '.')
+            {
+                // .e10 is invalid.
+                return Error(message: "Must contain digits after '.'");
+            }
+
+            if (_ch == 'e')
+            {
+                Consume();
+                if (preDotLength > 1)
+                {
+                    return Error(message: "Coefficient must be less than 10.");
+                }
+
+                if (_ch == '+' || _ch == '-')
+                {
+                    Consume();
+                }
+                while (_ch.IsDigit())
+                {
+                    Consume();
+                }
+            }
+
+            if (_ch == 'f' || _ch == 'F' || _ch == 'd' || _ch == 'D' || _ch == 'm' || _ch == 'M')
+            {
+                Consume();
+            }
+
+            if (!_ch.IsWhiteSpace() && !_ch.IsPunctuation() && !_ch.IsEOF())
+            {
+                if (_ch.IsLetter())
+                {
+                    return Error(message: "'{0}' is an invalid real value");
+                }
+
+                return Error();
+            }
+
+            return CreateToken(TokenType.RealLiteral);
         }
         private IToken Double()
         {
@@ -441,7 +491,7 @@ namespace Sxc.Lexer
         {
             Advance();
 
-            // TODO(Dan): Check for escaped quote marks: '\"'
+            // TODO(Dan): Do we need to consider escaping here?
             while (_ch != '"')
             {
                 if (_ch.IsEOF())
@@ -456,24 +506,23 @@ namespace Sxc.Lexer
 
             return CreateToken(TokenType.StringLiteral);
         }
-        private IToken Error(Severity severity = Severity.Error, string message = "Unexpected token '{severity}'")
+        private IToken Error(Severity severity = Severity.Error, string message = "Unexpected token '{0}'")
         {
             while (!_ch.IsWhiteSpace() && !_ch.IsEOF() && !_ch.IsPunctuation())
                 Consume();
 
-            AddError($"{message}", severity);
+            AddError(string.Format(message, severity), severity);
 
             return CreateToken(TokenType.Error);
         }
         private void AddError(string message, Severity severity)
         {
-            // TODO(Dan): Populate the lines for the section in the file we are looking at
-            var sourcePart = new SourceFilePart(_sourceFileLocation, new SourceFileLocation(_column, _index, _line), new string[] { });
+            var sourcePart = new SourceFilePart(_sourceFileLocation, new SourceFileLocation(_column, _index, _line), _builder.ToString().Split('\n'));
             _errorSink.AddError(message, sourcePart, severity);
         }
 
-        public SxcLexer() : this(new ErrorSink()) { }
-        public SxcLexer(IErrorSink errorSink)
+        public SxcLexer(string[] grammar) : this(grammar, new ErrorSink()) { }
+        public SxcLexer(string[] grammar, IErrorSink errorSink)
         {
             if (errorSink == null)
                 throw new ArgumentNullException(nameof(errorSink));
@@ -481,6 +530,7 @@ namespace Sxc.Lexer
             _builder = new StringBuilder();
             _sourceFile = null;
             _errorSink = errorSink;
+            _keywords = grammar;
         }
     }
 }

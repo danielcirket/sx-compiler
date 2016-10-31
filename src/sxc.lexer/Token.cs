@@ -31,7 +31,7 @@ namespace Sxc.Lexer
         public Token(TokenType tokenType, string content, ISourceFileLocation startSourceLocation, ISourceFileLocation endSourceLocation)
         {
             _type = tokenType;
-            _sourceFilePart = new SourceFilePart(startSourceLocation, endSourceLocation, new string[] { });
+            _sourceFilePart = new SourceFilePart(startSourceLocation, endSourceLocation, content.Split('\n'));
             _value = content;
         }
     }

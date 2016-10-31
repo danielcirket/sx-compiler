@@ -8,7 +8,7 @@ namespace Sxc.Lexer
     {
         public static string[] GetLines(this ISourceFile source, int start, int end)
         {
-            // TODO(Dan): Do this 'properly'.
+            // TODO(Dan): Do this 'properly', i.e. remove the linq if it becomes an issue.
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
