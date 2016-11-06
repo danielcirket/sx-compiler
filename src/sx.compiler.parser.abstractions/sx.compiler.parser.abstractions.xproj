@@ -6,10 +6,11 @@
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>6081a246-3aff-45a2-b480-ffc27b3c08fc</ProjectGuid>
-    <RootNamespace>Sxc</RootNamespace>
+    <ProjectGuid>051ade1d-4adc-4bb1-b057-4adbae7112f2</ProjectGuid>
+    <RootNamespace>Sxc.Compiler.Parser.Abstractions</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">.\obj</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">.\bin\</OutputPath>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup>
     <SchemaVersion>2.0</SchemaVersion>

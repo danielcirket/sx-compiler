@@ -1,0 +1,30 @@
+﻿import Sx.Core;
+
+module ExampleModule
+{
+	public class Program
+    {
+		public int Main()
+        {
+            // This is a line comment
+            /*
+             * This is a
+             * block style comment
+             */
+			 # This is another line comment
+			let exampleFloat = 2.0f;
+			let exampleDouble = 3.0d;
+			let exampleDecimal = 4.0m;
+			let exampleExponentFloat = 1e10f;
+			let examplePositiveInt = 10;
+			let exampleNegativeInt = -5;
+			let exampleNegativeFloat = -2.5f;
+            let returnCode = 2;
+			let charLiteral = 'a';
+            return returnCode;
+
+			// NOTE(Dan): This next line should give a token error
+			let someError = 10z;
+        }
+    }
+}
