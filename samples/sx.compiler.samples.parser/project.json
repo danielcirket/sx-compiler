@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0-*",
+  "buildOptions": {
+    "emitEntryPoint": true
+  },
+  "frameworks": {
+    "net452": {}
+  },
+  "dependencies": {
+    "sx.compiler.abstractions": "0.0.1",
+    "sx.compiler.lexer": "0.0.1",
+    "sx.compiler.lexer.abstractions": "0.0.1",
+    "sx.compiler.parser": "0.0.1"
+  }
+}

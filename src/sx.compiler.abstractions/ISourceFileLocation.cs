@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Sx.Lexer.Abstractions
+namespace Sx.Compiler.Abstractions
 {
     public interface ISourceFileLocation : IEquatable<ISourceFileLocation>
     {

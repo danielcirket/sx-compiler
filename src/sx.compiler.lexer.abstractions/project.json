@@ -1,8 +1,8 @@
-﻿{
+{
   "version": "0.0.1",
 
   "dependencies": {
-
+    "sx.compiler.abstractions": "0.0.1"
   },
 
   "frameworks": {

@@ -19,3 +19,4 @@ using System.Runtime.InteropServices;
 [assembly: Guid("e8d969b2-cc77-4856-a8dc-12717b03e8b6")]
 [assembly: InternalsVisibleTo("sx.compiler.lexer.tests")]
 [assembly: InternalsVisibleTo("sx.compiler.samples.lexer")]
+[assembly: InternalsVisibleTo("sx.compiler.samples.parser")]

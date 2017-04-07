@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Sx.Compiler.Abstractions;
 using Sx.Lexer.Abstractions;
 
 namespace Sx.Lexer

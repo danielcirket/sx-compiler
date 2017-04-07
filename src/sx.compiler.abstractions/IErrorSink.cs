@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Sx.Lexer.Abstractions
+namespace Sx.Compiler.Abstractions
 {
     public interface IErrorSink : IEnumerable<IError>
     {

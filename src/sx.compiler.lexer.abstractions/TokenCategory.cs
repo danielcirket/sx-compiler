@@ -10,6 +10,7 @@
         Grouping,
         Punctuation,
         Operator,
-        Invalid
+        Invalid,
+        Identifier
     }
 }

@@ -1,10 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Sx.Lexer.Abstractions;
 
-namespace Sx.Lexer
+namespace Sx.Compiler.Abstractions
 {
-    internal class ErrorSink : IErrorSink
+    public class ErrorSink : IErrorSink
     {
         private List<IError> _errors;
 

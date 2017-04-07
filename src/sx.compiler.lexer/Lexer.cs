@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using Sx.Compiler.Abstractions;
+using Sx.Compiler.Lexer.Abstractions;
 using Sx.Lexer.Abstractions;
 
 namespace Sx.Lexer
 {
-    internal class SxcLexer : ILexer
+    internal class Lexer : ILexer
     {
+        private readonly TokenizerGrammar _grammar;
         private readonly string[] _keywords;
         private StringBuilder _builder;
         private int _column;
@@ -483,12 +487,25 @@ namespace Sx.Lexer
         {
             Advance();
 
-            while(_ch != '\'')
+            var escaping = false;
+
+            while ((_ch.ToString() != _grammar.SpecialCharacters.First(match => match.TokenType == TokenType.CharLiteral).Value) || escaping)
             {
                 if (IsEOF())
                 {
                     AddError("Unexpected End Of File", Severity.Fatal);
                     return CreateToken(TokenType.Error);
+                }
+
+                if (escaping)
+                {
+                    escaping = false;
+                }
+                else if (_ch == '\\')
+                {
+                    Advance();
+                    escaping = true;
+                    continue;
                 }
 
                 Consume();
@@ -502,15 +519,29 @@ namespace Sx.Lexer
         {
             Advance();
 
+            var escaping = false;
+
             // TODO(Dan): Do we need to consider escaping here?
-            while (_ch != '"')
+            while (_ch != '"' || escaping)
             {
                 if (IsEOF())
                 {
                     AddError("Unexpected End Of File", Severity.Fatal);
                     return CreateToken(TokenType.Error);
                 }
-                Consume();
+
+                if (escaping)
+                {
+                    escaping = false;
+                }
+                else if (_ch == '\\')
+                {
+                    Advance();
+                    escaping = true;
+                    continue;
+                }
+                
+                Consume();                  
             }
 
             Advance();
@@ -536,8 +567,8 @@ namespace Sx.Lexer
             return _index == _sourceFile.Contents.Length || _ch.IsEOF();
         }
 
-        public SxcLexer(string[] grammar) : this(grammar, new ErrorSink()) { }
-        public SxcLexer(string[] grammar, IErrorSink errorSink)
+        public Lexer(TokenizerGrammar grammar) : this(grammar, new ErrorSink()) { }
+        public Lexer(TokenizerGrammar grammar, IErrorSink errorSink)
         {
             if (grammar == null)
                 throw new ArgumentNullException(nameof(grammar));
@@ -548,7 +579,8 @@ namespace Sx.Lexer
             _builder = new StringBuilder();
             _sourceFile = null;
             _errorSink = errorSink;
-            _keywords = grammar;
+            _grammar = grammar;
+            _keywords = grammar.Keywords.Select(match => match.Value).ToArray();
         }
     }
 }

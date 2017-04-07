@@ -1,0 +1,318 @@
+{ 
+  "Keywords": [ 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "import" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "module" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "public" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "private" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "internal" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "protected" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "class" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "interface" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "if" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "else" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "switch" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "case" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "default" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "break" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "return" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "while" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "for" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "let" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "true" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "false" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "int" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "string" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "void" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "float" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "double" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "decimal" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "char" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "try" 
+    }, 
+    { 
+      "TokenType": "Keyword", 
+      "Value": "catch" 
+    } 
+  ], 
+  "SpecialCharacters": [ 
+    { 
+      "TokenType": "LineComment", 
+      "Value": "//" 
+    }, 
+    { 
+      "TokenType": "LineComment", 
+      "Value": "#" 
+    }, 
+    { 
+      "TokenType": "BlockComment", 
+      "Value": "/*" 
+    }, 
+    { 
+      "TokenType": "BlockComment", 
+      "Value": "*/" 
+    }, 
+    { 
+      "TokenType": "LeftBracket", 
+      "Value": "{" 
+    }, 
+    { 
+      "TokenType": "RightBrace", 
+      "Value": "}" 
+    }, 
+    { 
+      "TokenType": "LeftBrace", 
+      "Value": "[" 
+    }, 
+    { 
+      "TokenType": "RightBrace", 
+      "Value": "]" 
+    }, 
+    { 
+      "TokenType": "LeftParenthesis", 
+      "Value": "(" 
+    }, 
+    { 
+      "TokenType": "RightParenthesis", 
+      "Value": ")" 
+    }, 
+    { 
+      "TokenType": "GreaterThanOrEqual", 
+      "Value": ">=" 
+    }, 
+    { 
+      "TokenType": "GreaterThan", 
+      "Value": ">" 
+    }, 
+    { 
+      "TokenType": "LessThan", 
+      "Value": "<" 
+    }, 
+    { 
+      "TokenType": "LessThanOrEqual", 
+      "Value": "<=" 
+    }, 
+    { 
+      "TokenType": "PlusEqual", 
+      "Value": "+=" 
+    }, 
+    { 
+      "TokenType": "PlusPlus", 
+      "Value": "++" 
+    }, 
+    { 
+      "TokenType": "Plus", 
+      "Value": "+" 
+    }, 
+    { 
+      "TokenType": "MinusEqual", 
+      "Value": "-=" 
+    }, 
+    { 
+      "TokenType": "MinusMinus", 
+      "Value": "--" 
+    }, 
+    { 
+      "TokenType": "Minus", 
+      "Value": "-" 
+    }, 
+    { 
+      "TokenType": "Assignment", 
+      "Value": "=" 
+    }, 
+    { 
+      "TokenType": "Not", 
+      "Value": "!" 
+    }, 
+    { 
+      "TokenType": "NotEqual", 
+      "Value": "!=" 
+    }, 
+    { 
+      "TokenType": "Mul", 
+      "Value": "*" 
+    }, 
+    { 
+      "TokenType": "MulEqual", 
+      "Value": "*=" 
+    }, 
+    { 
+      "TokenType": "Div", 
+      "Value": "/" 
+    }, 
+    { 
+      "TokenType": "DivEqual", 
+      "Value": "/=" 
+    }, 
+    { 
+      "TokenType": "BooleanAnd", 
+      "Value": "&&" 
+    }, 
+    { 
+      "TokenType": "BooleanOr", 
+      "Value": "||" 
+    }, 
+    { 
+      "TokenType": "BitwiseAnd", 
+      "Value": "&" 
+    }, 
+    { 
+      "TokenType": "BitwiseOr", 
+      "Value": "|" 
+    }, 
+    { 
+      "TokenType": "BitwiseAndEqual", 
+      "Value": "&=" 
+    }, 
+    { 
+      "TokenType": "BitwiseOrEqual", 
+      "Value": "|=" 
+    }, 
+    { 
+      "TokenType": "ModEqual", 
+      "Value": "%=" 
+    }, 
+    { 
+      "TokenType": "Mod", 
+      "Value": "%" 
+    }, 
+    { 
+      "TokenType": "BitwiseXorEqual", 
+      "Value": "^=" 
+    }, 
+    { 
+      "TokenType": "BitwiseXor", 
+      "Value": "^" 
+    }, 
+    { 
+      "TokenType": "DoubleQuestion", 
+      "Value": "??" 
+    }, 
+    { 
+      "TokenType": "Question", 
+      "Value": "?" 
+    }, 
+    { 
+      "TokenType": "Equal", 
+      "Value": "==" 
+    }, 
+    { 
+      "TokenType": "BitShiftLeft", 
+      "Value": "<<" 
+    }, 
+    { 
+      "TokenType": "BitShiftRight", 
+      "Value": ">>" 
+    }, 
+    { 
+      "TokenType": "Dot", 
+      "Value": "." 
+    }, 
+    { 
+      "TokenType": "Comma", 
+      "Value": "," 
+    }, 
+    { 
+      "TokenType": "Semicolon", 
+      "Value": ";" 
+    }, 
+    { 
+      "TokenType": "Colon", 
+      "Value": ":" 
+    }, 
+    { 
+      "TokenType": "Arrow", 
+      "Value": "->" 
+    }, 
+    { 
+      "TokenType": "FatArrow", 
+      "Value": "=>" 
+    }, 
+    { 
+      "TokenType": "CharLiteral", 
+      "Value": "'" 
+    } 
+  ] 
+}

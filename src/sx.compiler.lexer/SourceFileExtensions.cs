@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Sx.Lexer.Abstractions;
+using Sx.Compiler.Abstractions;
 
 namespace Sx.Lexer
 {

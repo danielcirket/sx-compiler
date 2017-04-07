@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Sx.Compiler.Abstractions;
 
 namespace Sx.Lexer.Abstractions
 {

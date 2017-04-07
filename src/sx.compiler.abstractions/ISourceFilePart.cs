@@ -1,4 +1,4 @@
-﻿namespace Sx.Lexer.Abstractions
+﻿namespace Sx.Compiler.Abstractions
 {
     public interface ISourceFilePart
     {

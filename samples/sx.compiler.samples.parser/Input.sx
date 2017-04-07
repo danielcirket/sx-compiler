@@ -1,0 +1,53 @@
+﻿import Sx;
+import Sx.Collections;
+
+module Sx.Test
+{
+	class Program
+	{
+		field int _intField = 1;
+
+		property int TestIntProp { get { return 1; } }
+		property string TestStringProp { get { return ""; } set { _value = value; } }
+		property string TestExpressionProp => () => { return "Test Lambda Return For Property" };
+		property string TestExpressionPropNoLambda => _intField;
+
+		function int ParameterlessMethodThatReturnsInt()
+		{
+			return 1;
+		}
+		function string MethodThatTakesArgumentAndReturnsString(string value)
+		{
+			return value;
+		}
+		function SomeClass MethodThatTakesMultipleArgumentsAndReturnsString(string value, int anotherValue)
+		{
+			return value + anotherValue;
+		}
+
+		constructor ()
+		{
+			TestIntProp = 1;
+			var testVariable = "test";
+
+			var result = MethodThatTakesMultipleArgumentsAndReturnsString("string", 1);
+
+			var lambda = () => 
+			{
+				var lambdaVariable = 1234;
+			};
+
+			var anotherLamda = () => "12345";
+		}
+	}
+
+	class TestClass
+	{
+		field int _testIntField = 1;
+
+		constructor (int value)
+		{
+			_testIntField = value;
+		}
+	}
+}
