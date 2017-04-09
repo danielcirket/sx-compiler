@@ -1,12 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E2E3358F-ABAE-4C31-962D-E476A8F6DBF1}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
-		global.json = global.json
 		LICENSE = LICENSE
 	EndProjectSection
 EndProject
@@ -16,21 +15,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{65DA423B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{C52E1ABD-FBC0-4D6C-838A-62ED7B5DFCFF}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "sxc", "src\sxc\sxc.xproj", "{6081A246-3AFF-45A2-B480-FFC27B3C08FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sxc", "src\sxc\sxc.csproj", "{6081A246-3AFF-45A2-B480-FFC27B3C08FC}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "sx.compiler.lexer", "src\sx.compiler.lexer\sx.compiler.lexer.xproj", "{E8D969B2-CC77-4856-A8DC-12717B03E8B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sx.compiler.lexer", "src\sx.compiler.lexer\sx.compiler.lexer.csproj", "{E8D969B2-CC77-4856-A8DC-12717B03E8B6}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "sx.compiler.lexer.abstractions", "src\sx.compiler.lexer.abstractions\sx.compiler.lexer.abstractions.xproj", "{1DD1D1BC-586D-4220-BF8E-93F4F724008A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sx.compiler.lexer.abstractions", "src\sx.compiler.lexer.abstractions\sx.compiler.lexer.abstractions.csproj", "{1DD1D1BC-586D-4220-BF8E-93F4F724008A}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "sx.compiler.samples.lexer", "samples\sx.compiler.samples.lexer\sx.compiler.samples.lexer.xproj", "{4C5A544C-7E93-4B10-8AAC-14B8EE200086}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sx.compiler.samples.lexer", "samples\sx.compiler.samples.lexer\sx.compiler.samples.lexer.csproj", "{4C5A544C-7E93-4B10-8AAC-14B8EE200086}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "sx.compiler.lexer.tests", "tests\sx.compiler.lexer.tests\sx.compiler.lexer.tests.xproj", "{D222BFBC-7A7B-438D-AFD2-F2F2272C1A1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sx.compiler.lexer.tests", "tests\sx.compiler.lexer.tests\sx.compiler.lexer.tests.csproj", "{D222BFBC-7A7B-438D-AFD2-F2F2272C1A1F}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "sx.compiler.abstractions", "src\sx.compiler.abstractions\sx.compiler.abstractions.xproj", "{DBBD11BD-B8A8-4E75-99D6-3DF362473367}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sx.compiler.abstractions", "src\sx.compiler.abstractions\sx.compiler.abstractions.csproj", "{DBBD11BD-B8A8-4E75-99D6-3DF362473367}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "sx.compiler.parser", "src\sx.compiler.parser\sx.compiler.parser.xproj", "{E28322FC-6270-4626-8D1D-E9BD5765DE9B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sx.compiler.parser", "src\sx.compiler.parser\sx.compiler.parser.csproj", "{E28322FC-6270-4626-8D1D-E9BD5765DE9B}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "sx.compiler.samples.parser", "samples\sx.compiler.samples.parser\sx.compiler.samples.parser.xproj", "{E1992107-9EDB-4D36-9839-F44954532674}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sx.compiler.samples.parser", "samples\sx.compiler.samples.parser\sx.compiler.samples.parser.csproj", "{E1992107-9EDB-4D36-9839-F44954532674}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

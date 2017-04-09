@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net452</TargetFramework>
+    <AssemblyName>sx.compiler.samples.parser</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <PackageId>sx.compiler.samples.parser</PackageId>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\sx.compiler.abstractions\sx.compiler.abstractions.csproj" />
+    <ProjectReference Include="..\..\src\sx.compiler.lexer\sx.compiler.lexer.csproj" />
+    <ProjectReference Include="..\..\src\sx.compiler.lexer.abstractions\sx.compiler.lexer.abstractions.csproj" />
+    <ProjectReference Include="..\..\src\sx.compiler.parser\sx.compiler.parser.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+</Project>
