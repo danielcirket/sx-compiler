@@ -28,7 +28,12 @@ namespace Sx.Compiler.Samples.Parser
 
             Visit(expression.Left);
 
-            Console.WriteLine(expression.Operator);
+            result = string.Empty;
+
+            for (var i = 0; i < _indent; i++)
+                result += "    ";
+
+            Console.WriteLine(result += expression.Operator);
 
             Visit(expression.Right);
 
@@ -86,7 +91,7 @@ namespace Sx.Compiler.Samples.Parser
             _indent--;
         }
         protected override void VisitBlock(BlockStatement statement)
-        {
+            {
             var result = string.Empty;
 
             for (var i = 0; i < _indent; i++)
@@ -96,7 +101,7 @@ namespace Sx.Compiler.Samples.Parser
 
             Console.WriteLine(result);
 
-            _indent++;
+             _indent++;
 
             foreach (var child in statement.Contents)
                 Visit(child);
@@ -163,7 +168,7 @@ namespace Sx.Compiler.Samples.Parser
             for (var i = 0; i < _indent; i++)
                 result += "    ";
 
-            result += $"CONSTANT: {expression.Value}";
+            result += $"CONSTANT: {expression.Value} ({expression.ConstentKind})";
 
             Console.WriteLine(result);
         }
@@ -303,7 +308,7 @@ namespace Sx.Compiler.Samples.Parser
             for (var i = 0; i < _indent; i++)
                 result += "    ";
 
-            result += $"METHOD DECLARATION: {methodDeclaration.Name}({string.Join(", ", methodDeclaration.Parameters.Select(x => x.Type.Name))}) => {methodDeclaration.ReturnType.Name}";
+            result += $"METHOD DECLARATION: ({methodDeclaration.Visibility}) {methodDeclaration.Name}({string.Join(", ", methodDeclaration.Parameters.Select(x => x.Type.Name))}) => {methodDeclaration.ReturnType.Name}";
 
             Console.WriteLine(result);
 
@@ -383,7 +388,7 @@ namespace Sx.Compiler.Samples.Parser
             for (var i = 0; i < _indent; i++)
                 result += "    ";
 
-            result += $"PROPERTY: {propertyDeclaration.Name} {propertyDeclaration.Type}";
+            result += $"PROPERTY: {propertyDeclaration.Name} {propertyDeclaration.Type.Name}";
 
             Console.WriteLine(result);
 
@@ -411,13 +416,25 @@ namespace Sx.Compiler.Samples.Parser
         }
         protected override void VisitVariable(VariableDeclaration variableDeclaration)
         {
-            
+            var result = string.Empty;
+
+            for (var i = 0; i < _indent; i++)
+                result += "    ";
+
+            result += $"VARIABLE DECLARATION: {variableDeclaration.Name}";
+
+            Console.WriteLine(result);
+
+            _indent++;
+
+             Visit(variableDeclaration.Value);
+
+            _indent--;
         }
         protected override void VisitWhile(WhileStatement statement)
         {
             
         }
-
         protected override void VisitType(TypeDeclaration typeDeclaration)
         {
             var result = string.Empty;
@@ -428,6 +445,25 @@ namespace Sx.Compiler.Samples.Parser
             result += $"TYPE DECLARATION: {typeDeclaration.Name}";
 
             Console.WriteLine(result);
+        }
+        protected override void VisitReturn(ReturnStatement statement)
+        {
+            var result = string.Empty;
+
+            for (var i = 0; i < _indent; i++)
+                result += "    ";
+
+            result += $"RETURN STATEMENT:";
+
+            Console.WriteLine(result);
+
+            _indent++;
+
+            result = string.Empty;
+
+            Visit(statement.Value);
+
+            _indent--;
         }
 
         public AstPrintVisitor()

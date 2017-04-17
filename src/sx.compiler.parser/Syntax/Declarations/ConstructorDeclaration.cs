@@ -8,10 +8,12 @@ namespace Sx.Compiler.Parser.Syntax.Declarations
     {
         public BlockStatement Body { get; }
         public override SyntaxKind Kind => SyntaxKind.ConstructorDeclaration;
+        public DeclarationVisibility Visibility { get; }
         public IEnumerable<ParameterDeclaration> Parameters { get; }
 
-        public ConstructorDeclaration(ISourceFilePart span, IEnumerable<ParameterDeclaration> parameters, BlockStatement body) : base(span, string.Empty)
+        public ConstructorDeclaration(ISourceFilePart span, DeclarationVisibility visibility, IEnumerable<ParameterDeclaration> parameters, BlockStatement body) : base(span, string.Empty)
         {
+            Visibility = visibility;
             Body = body;
             Parameters = parameters;
         }

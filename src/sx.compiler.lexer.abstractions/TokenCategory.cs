@@ -6,7 +6,6 @@
         Whitespace,
         Comment,
         Constant,
-        Indentifier,
         Grouping,
         Punctuation,
         Operator,

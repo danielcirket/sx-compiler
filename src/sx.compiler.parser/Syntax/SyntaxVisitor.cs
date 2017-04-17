@@ -12,7 +12,7 @@ namespace Sx.Compiler.Parser.Syntax
     {
         public void Visit(SyntaxNode node)
         {
-            switch (node.Category)
+            switch (node?.Category)
             {
                 case SyntaxCatagory.Document:
                     VisitDocument(node as SourceDocument);
@@ -115,7 +115,7 @@ namespace Sx.Compiler.Parser.Syntax
             }
         }
         protected void VisitStatement(Statement statement)
-        {
+         {
             switch (statement.Kind)
             {
                 case SyntaxKind.ImportStatement:
@@ -160,6 +160,10 @@ namespace Sx.Compiler.Parser.Syntax
 
                 case SyntaxKind.WhileStatement:
                     VisitWhile(statement as WhileStatement);
+                    break;
+
+                case SyntaxKind.ReturnStatement:
+                    VisitReturn(statement as ReturnStatement);
                     break;
             }
         }
@@ -244,6 +248,7 @@ namespace Sx.Compiler.Parser.Syntax
         protected abstract void VisitUnary(UnaryExpression expression);
         protected abstract void VisitVariable(VariableDeclaration variableDeclaration);
         protected abstract void VisitWhile(WhileStatement statement);
+        protected abstract void VisitReturn(ReturnStatement statement);
     }
     
 }

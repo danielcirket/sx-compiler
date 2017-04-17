@@ -17,6 +17,6 @@ namespace Sx.Compiler.Parser.Syntax.Expressions
             Body = body;
         }
 
-        public MethodDeclaration ToMethodDeclaration(string name, string type) => new MethodDeclaration(FilePart, name, new TypeDeclaration(null, type), Parameters, Body);
+        public MethodDeclaration ToMethodDeclaration(string name, string type, DeclarationVisibility visibility) => new MethodDeclaration(FilePart, name, visibility, new TypeDeclaration(null, type), Parameters, Body);
     }
 }

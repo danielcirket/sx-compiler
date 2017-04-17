@@ -3,51 +3,60 @@ import Sx.Collections;
 
 module Sx.Test
 {
-	class Program
+	public class Program
 	{
-		field int _intField = 1;
+		private field int _intField = 1;
+		
+		//public property int TestIntProp { get { return 1; } }
+		public property string TestStringProp { get { return "string constant"; } private set { _value = value; } }; # Putting a semi colon is a warning, not needed - should we need this here?
+		//property string TestExpressionProp => { return "Test Return For Property" } // Putting a semi colon is a warning, not needed - should we need this here?
+		//public property SomeType TestGetSet { get; set; }
+		//property string TestExpressionPropNoLambda => _intField
+		//property string TestExpressionPropNoLambda2 => _intField2
 
-		property int TestIntProp { get { return 1; } }
-		property string TestStringProp { get { return ""; } set { _value = value; } }
-		property string TestExpressionProp => () => { return "Test Lambda Return For Property" };
-		property string TestExpressionPropNoLambda => _intField;
+		//function int ParameterlessMethodThatReturnsInt()
+		//{
+		//	return 1;
+		//}
+		//function string MethodThatTakesArgumentAndReturnsString(string value)
+		//{
+		//	return value;
+		//}
+		//function SomeClass MethodThatTakesMultipleArgumentsAndReturnsString(string value, int anotherValue)
+		//{
+		//	return value + anotherValue;
+		//}
+		
+		//constructor ()
+		//{
+		//	TestIntProp = 1;
+		//	var testVariable = "test";
+		//	var testVariableNoValue;
+		//	
+		//	var result = MethodThatTakesMultipleArgumentsAndReturnsString("string", 1);
+		//	
+		//	var lambda = () => 
+		//	{
+		//		var lambdaVariable = 1234;
+		//	}  // Putting a semi colon is a warning, not needed - should we need this here?
+		//	
+		//	var anotherLamda = () => "12345";
+		//	
+		//	var result = 1 + 2 / 3 - 4;
+		//	var result = ((1 + 2) / 3) - 4;
+		//}
+		
+		//constructor (string value)
+		//{
+		//	TestStringProp = value;
+		//}
 
-		function int ParameterlessMethodThatReturnsInt()
-		{
-			return 1;
-		}
-		function string MethodThatTakesArgumentAndReturnsString(string value)
-		{
-			return value;
-		}
-		function SomeClass MethodThatTakesMultipleArgumentsAndReturnsString(string value, int anotherValue)
-		{
-			return value + anotherValue;
-		}
+		// What happens if we have a comment but missing the comment characters after a valid declaration in the class scope
+		//field SomeType _fieldName = 1234; This is supposed to be a comment
 
-		constructor ()
-		{
-			TestIntProp = 1;
-			var testVariable = "test";
+		// What happens if we just have garbage? - Should be an error
+		//askljdnk askjdnaskjd adsjikdhnkasd kajkjsdnkadasdnk 123123123
 
-			var result = MethodThatTakesMultipleArgumentsAndReturnsString("string", 1);
-
-			var lambda = () => 
-			{
-				var lambdaVariable = 1234;
-			};
-
-			var anotherLamda = () => "12345";
-		}
-	}
-
-	class TestClass
-	{
-		field int _testIntField = 1;
-
-		constructor (int value)
-		{
-			_testIntField = value;
-		}
+		 
 	}
 }

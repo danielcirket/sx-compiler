@@ -37,7 +37,7 @@ namespace Sx.Compiler.Samples.Parser
                     new TokenMatch(TokenType.Keyword, "return"),
                     new TokenMatch(TokenType.Keyword, "while"),
                     new TokenMatch(TokenType.Keyword, "for"),
-                    new TokenMatch(TokenType.Keyword, "let"),
+                    new TokenMatch(TokenType.Keyword, "var"),
                     new TokenMatch(TokenType.Keyword, "true"),
                     new TokenMatch(TokenType.Keyword, "false"),
                     //new TokenMatch(TokenType.Keyword, "int"),
@@ -140,7 +140,7 @@ namespace Sx.Compiler.Samples.Parser
                 Console.WriteLine("---------- ERRORS: ----------");
 
                 foreach (var error in parser.ErrorSink)
-                    Console.WriteLine($"Severity: {error.Severity}, Message: {error.Message}, Location: (Start LineNo) {error.FilePart.Start.Line} (Start Col) {error.FilePart.Start.Column}, (End LineNo) {error.FilePart.End.Line}, (End Col) {error.FilePart.End.Column}. Value: {string.Join(" ", error.FilePart.Lines ?? new[] { string.Empty })}");
+                    Console.WriteLine($"Severity: {error.Severity}. Message: {error.Message}. Location: (Start LineNo) {error.FilePart.Start.Line} (Start Col) {error.FilePart.Start.Column}, (End LineNo) {error.FilePart.End.Line}, (End Col) {error.FilePart.End.Column}. Value: {string.Join(" ", error.FilePart.Lines ?? new[] { string.Empty })}");
             }
 
             Console.WriteLine("-----------------------------");

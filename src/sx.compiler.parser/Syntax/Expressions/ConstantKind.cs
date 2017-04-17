@@ -4,7 +4,7 @@
     {
         Invalid,
         Integer,
-        Float,
+        Real,
         String,
         Boolean
     }
