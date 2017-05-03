@@ -1,62 +1,38 @@
 ﻿import Sx;
-import Sx.Collections;
+import Sx.AnotherTest;
 
 module Sx.Test
 {
 	public class Program
 	{
-		private field int _intField = 1;
-		
-		//public property int TestIntProp { get { return 1; } }
-		public property string TestStringProp { get { return "string constant"; } private set { _value = value; } }; # Putting a semi colon is a warning, not needed - should we need this here?
-		//property string TestExpressionProp => { return "Test Return For Property" } // Putting a semi colon is a warning, not needed - should we need this here?
-		//public property SomeType TestGetSet { get; set; }
-		//property string TestExpressionPropNoLambda => _intField
-		//property string TestExpressionPropNoLambda2 => _intField2
+		//private int _intField = 1;
+		//private T _genericField = MethodCall();
 
-		//function int ParameterlessMethodThatReturnsInt()
+		//public int TestIntProp { get { return 1; } }
+		//public string TestStringProp { get { return "string constant"; } private set { _value = value; } }
+		//protected SomeType TestGetSet { get; set; }
+		//protected string TestExpressionPropNoLambda => _intField + _intField2;
+		//private string TestExpressionPropNoLambda2 => _intField2;
+		//public T TestExpressionProp3 => _genericField;
+		//public string TestExpressionProp3 => "Test Return For Property";
+		//public int TestExpressionBodiedMemberProperty
 		//{
-		//	return 1;
+		//	get => _intField;
+		//	set => _intField = value;
 		//}
-		//function string MethodThatTakesArgumentAndReturnsString(string value)
+		//
+		//public string MethodWithExpressionBody(int parameter) => AnotherMethod(parameter);
+		//public string MethodWithGenericTypeArguments<T4>(T4 arg)
 		//{
-		//	return value;
-		//}
-		//function SomeClass MethodThatTakesMultipleArgumentsAndReturnsString(string value, int anotherValue)
-		//{
-		//	return value + anotherValue;
-		//}
-		
-		//constructor ()
-		//{
-		//	TestIntProp = 1;
-		//	var testVariable = "test";
-		//	var testVariableNoValue;
 		//	
-		//	var result = MethodThatTakesMultipleArgumentsAndReturnsString("string", 1);
-		//	
-		//	var lambda = () => 
-		//	{
-		//		var lambdaVariable = 1234;
-		//	}  // Putting a semi colon is a warning, not needed - should we need this here?
-		//	
-		//	var anotherLamda = () => "12345";
-		//	
-		//	var result = 1 + 2 / 3 - 4;
-		//	var result = ((1 + 2) / 3) - 4;
 		//}
 		
-		//constructor (string value)
-		//{
-		//	TestStringProp = value;
-		//}
+		public constructor()
+		{
+		}
 
-		// What happens if we have a comment but missing the comment characters after a valid declaration in the class scope
-		//field SomeType _fieldName = 1234; This is supposed to be a comment
-
-		// What happens if we just have garbage? - Should be an error
-		//askljdnk askjdnaskjd adsjikdhnkasd kajkjsdnkadasdnk 123123123
-
-		 
+		public constructor(int value)
+		{
+		}
 	}
 }

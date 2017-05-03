@@ -5,36 +5,39 @@ using System;
 
 namespace Sx.Compiler.Lexer.Tests
 {
-    public class StringExtensionTests
+    public partial class LexerTests
     {
-        public class IsKeyword
+        public class StringExtensionTests
         {
-            [Fact]
-            public void IfSourceIsNullThenShouldThrowArgumentNullException()
+            public class IsKeyword
             {
-                string input = null;
+                [Fact]
+                public void IfSourceIsNullThenShouldThrowArgumentNullException()
+                {
+                    string input = null;
 
-                Action act = () => input.IsKeyword(new[] { "class" });
+                    Action act = () => input.IsKeyword(new[] { "class" });
 
-                act.ShouldThrow<ArgumentNullException>();
-            }
-            [Fact]
-            public void  IfSourceExistsInKeywordsThenShouldReturnTrue()
-            {
-                var input = "class";
+                    act.ShouldThrow<ArgumentNullException>();
+                }
+                [Fact]
+                public void IfSourceExistsInKeywordsThenShouldReturnTrue()
+                {
+                    var input = "class";
 
-                var result = input.IsKeyword(new[] { input });
+                    var result = input.IsKeyword(new[] { input });
 
-                result.Should().Be(true);
-            }
-            [Fact]
-            public void IfSourceDoesNotExistInKeywordsThenShouldReturnFalse()
-            {
-                var input = "class";
+                    result.Should().Be(true);
+                }
+                [Fact]
+                public void IfSourceDoesNotExistInKeywordsThenShouldReturnFalse()
+                {
+                    var input = "class";
 
-                var result = input.IsKeyword(new[] { "struct" });
+                    var result = input.IsKeyword(new[] { "struct" });
 
-                result.Should().Be(false);
+                    result.Should().Be(false);
+                }
             }
         }
     }

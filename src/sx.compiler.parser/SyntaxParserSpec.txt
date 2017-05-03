@@ -1,0 +1,152 @@
+﻿-----------------------------------------------
+
+Sx-Lang Parser Spec (v0.0.1):
+
+-----------------------------------------------
+
+Author: Dan Cirket
+Date: 2017-04-27
+
+-----------------------------------------------
+
+Notes:
+
+[ ] = denotes optional
+... = denotes 1 or more
+|   = or
+( ) = grouping
+
+-----------------------------------------------
+
+SourceFile 			= [ ...<import declaration> ], (...<class declaration> | ...<method declaration>)
+
+Type Annotation 	= <identifier> | ("int" | "char" | "float" | "string" | "boolean" | "double" | "decimal")
+
+Scope 				= "{", [ <statement> ], "}"
+
+Lambda Body 		= "=>", ( <expression> | <scope> )
+
+
+
+-----------------------------------------------
+
+DECLARATIONS
+
+-----------------------------------------------
+
+Import Declaration 		= "import", <indentifier declaration> [ ...(".", <indentifier declaration>) ], ";"
+
+Class Declaration 		= <visibility declaration>, "class", <indentifier declaration>, "{", [ ...<class member declaration> ], "}"
+
+Class Member			= ( constructor declaration | method declaration | property declaration | field declaration );
+
+Field Declaration 		= <visibility>, <type>, <identifier>, ( ";" | <assignment> | <method call> | <lambda expression> )
+
+Property Declaration 	= <visibility>, <type>, <identifier>, ( <expression member body> | <property body> )
+
+Property Body 			= ( "get" | [ <scope> ], "set" ) | (<expression member body>, ";"), [ ( "get" | [<scope>] "set" ) | (<expression member body>, ";") ]
+
+Method Body 			= <visibility>, <type>, <identifier>, "(" [ <method argument list> ] ")", ( <scope> | <expression member body> )
+
+Constructor Declaration = <visibility>, "constructor", <argument list>, <scope>
+
+Argument List			= [ ...identifier ]
+
+Method Argument List	= [ ...(<type>, <identifier>)]
+
+Variable Declaration 	= "var", <identifier>, [ "=", <expression> ], ";"
+
+-----------------------------------------------
+
+STATEMENTS
+
+-----------------------------------------------
+
+Statement 			= ( <if statement> | <while statement> | <do while statement> | <for statement> | <switch statement> | (<expression>, ";") )
+
+Predicate 			= "(", <logical expression>, ")"
+
+If Statement 		= "if", <predicate>, (<expression> | <scope>)
+
+While Statement 	= "while", <predicate>, (<expression> | <scope>)
+
+Do While Statement 	= "do", <predicate>, (<expression> | <scope>), "while", <predicate>, ";"
+
+For Statement 		= "for", "(", (<variable declaration> | <empty statement>), ";", <logical expression>, ";", <expression>, ")", (<expression> | <scope>)
+
+Switch Statement 	= "switch", "(", <expression>, ")", "{", <switch item>, "}"
+
+Switch Item 		= <case list>
+
+Case List 			= ...<case statement> | <default statement> 
+
+Case Statement		= "case", <constant expression>, ":"
+
+Default Statement 	= "default", ":"
+
+-----------------------------------------------
+
+EXPRESSIONS
+
+-----------------------------------------------
+
+Expression 						= <assignment expression>
+
+Assignment Expression 			= <logical expression>, <assignment operator>, <assignment expression>
+
+Logical Expression 				= <equality expression>, <logical operator>, <logical expression>
+
+Equality Expression 			= <relational expression>,  <equality operator>, <equality expression>
+
+Relational Expression 			= <bitwise expression>, <relational operator>, <relational expression>
+
+Bitwise Expression 				= <shift expression>, <bitwise operator>, <bitwise expression>
+
+Shift Expression 				= <addative expression>, <shift operator>, <shift expression>
+
+Additive Expression 			= <multiplicative expression>, <addative operator>, <addative expression>
+
+Multiplicative Expression 		= <unary expression>, <multiplicative operator>, <multiplicative expression>
+
+Unary Expression 				= (<prefix unary operator>, <primary expression>) | (<primary expression> | <suffix unary operator>)
+
+Primary Expression 				= <identifier> | <constant expression> | <method call expression> | <new expression > | 
+								  <array access expression> | <reference expression> | <precedence override expression> | <lambda expression>
+
+Precedence Override Expression 	= "(", <expression>, ")"
+
+Method Call Expression 			= ( <identifier> | <reference expression> ), "(", [ <expression> ], ")" 
+
+Array Access Expression 		= ( <identifier> | <reference expression>), "[", <expression>, [ expression ], "]"
+
+New Expression 					= "new", <method call expression>
+
+Lambda Expression 				= ( <single argument lambda> | <full lambda> ), <lambda body>
+
+Single Argument Lambda 			= <method argument>
+
+Full Lambda 					= "(", <argument list>, ")" ;
+
+Reference Expression 			= ( <identifier> | <method call expression> | <array access expression> | <new expression> ), ".", 
+								  ( <identifier>),
+							      { ".", <identifier> },
+							      ( <method call expression> | <array access expression> )
+
+Constant Expression 			= <string literal> | <integer literal> | <float literal> | <boolean literal>
+
+-----------------------------------------------
+
+OPERATORS
+
+-----------------------------------------------
+
+Assignment Operator 	= "=" | "+=" | "-=" | "*=" | "/=" | "%=" | "&=" | "^=" | "|=" ;
+Logical Operator 		= "||" | "&&" ;
+Equality Operator 		= "==" | "!=" ;
+Relational Operator 	= ">" | "<" | ">=" | "<=" ;
+Bitwise Operator 		= "&" | "|" | "^" ;
+Shift Operator 			= "<<" | ">>" ;
+Additive Operator 		= "+" | "-" ;
+Multiplicative Operator = "*" | "/" | "%" ;
+Prefix Unary Operator 	= "++" | "--" | "!" | "-" ;
+Suffix Unary Operator 	= "++" | "--" ;

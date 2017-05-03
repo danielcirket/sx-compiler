@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E2E3358F-ABAE-4C31-962D-E476A8F6DBF1}"
 	ProjectSection(SolutionItems) = preProject
@@ -30,6 +30,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sx.compiler.parser", "src\sx.compiler.parser\sx.compiler.parser.csproj", "{E28322FC-6270-4626-8D1D-E9BD5765DE9B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sx.compiler.samples.parser", "samples\sx.compiler.samples.parser\sx.compiler.samples.parser.csproj", "{E1992107-9EDB-4D36-9839-F44954532674}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sx.compiler.parser.tests", "tests\sx.compiler.parser.tests\sx.compiler.parser.tests.csproj", "{4C4B2760-4D79-4140-8F2C-97B4D969963D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +71,10 @@ Global
 		{E1992107-9EDB-4D36-9839-F44954532674}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1992107-9EDB-4D36-9839-F44954532674}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E1992107-9EDB-4D36-9839-F44954532674}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C4B2760-4D79-4140-8F2C-97B4D969963D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C4B2760-4D79-4140-8F2C-97B4D969963D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C4B2760-4D79-4140-8F2C-97B4D969963D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C4B2760-4D79-4140-8F2C-97B4D969963D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -82,5 +88,6 @@ Global
 		{DBBD11BD-B8A8-4E75-99D6-3DF362473367} = {FF802EBD-2920-4F41-8EBD-875A04234BF7}
 		{E28322FC-6270-4626-8D1D-E9BD5765DE9B} = {FF802EBD-2920-4F41-8EBD-875A04234BF7}
 		{E1992107-9EDB-4D36-9839-F44954532674} = {C52E1ABD-FBC0-4D6C-838A-62ED7B5DFCFF}
+		{4C4B2760-4D79-4140-8F2C-97B4D969963D} = {65DA423B-6641-40BE-9895-8970DDC71B85}
 	EndGlobalSection
 EndGlobal

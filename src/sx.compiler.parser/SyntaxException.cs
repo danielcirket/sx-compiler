@@ -2,7 +2,7 @@
 
 namespace Sxc.Compiler.Parser.Abstractions
 {
-    internal class SyntaxException : Exception
+    public class SyntaxException : Exception
     {
         public SyntaxException()
         {

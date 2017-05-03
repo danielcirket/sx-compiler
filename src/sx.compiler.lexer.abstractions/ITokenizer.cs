@@ -3,7 +3,7 @@ using Sx.Compiler.Abstractions;
 
 namespace Sx.Lexer.Abstractions
 {
-    public interface ILexer
+    public interface ITokenizer
     {
         IErrorSink ErrorSink { get; }
         IEnumerable<IToken> Tokenize(ISourceFile sourceFile);

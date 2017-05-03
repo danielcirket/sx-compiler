@@ -6,6 +6,8 @@ namespace Sx.Compiler.Abstractions
     {
         IEnumerable<IError> Errors { get; }
         bool HasErrors { get; }
+        bool HasWarnings { get; }
+        bool HasMessage { get; }
 
         void AddError(string message, ISourceFilePart sourceFilePart, Severity severity);
         void Clear();

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net452</TargetFramework>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
     <AssemblyName>sx.compiler.samples.lexer</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>sx.compiler.samples.lexer</PackageId>

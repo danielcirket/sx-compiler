@@ -15,7 +15,7 @@ namespace Sx.Samples.Lexer
         {
             var content = File.ReadAllLines("./Input.sx");
 
-            var lexer = new Sx.Lexer.Lexer(new TokenizerGrammar
+            var lexer = new Tokenizer(new TokenizerGrammar
             {
                 Keywords = new List<TokenMatch>
                 {
@@ -39,13 +39,13 @@ namespace Sx.Samples.Lexer
                     new TokenMatch(TokenType.Keyword, "let"),
                     new TokenMatch(TokenType.Keyword, "true"),
                     new TokenMatch(TokenType.Keyword, "false"),
-                    new TokenMatch(TokenType.Keyword, "int"),
-                    new TokenMatch(TokenType.Keyword, "string"),
-                    new TokenMatch(TokenType.Keyword, "void"),
-                    new TokenMatch(TokenType.Keyword, "float"),
-                    new TokenMatch(TokenType.Keyword, "double"),
-                    new TokenMatch(TokenType.Keyword, "decimal"),
-                    new TokenMatch(TokenType.Keyword, "char"),
+                    //new TokenMatch(TokenType.Keyword, "int"),
+                    //new TokenMatch(TokenType.Keyword, "string"),
+                    //new TokenMatch(TokenType.Keyword, "void"),
+                    //new TokenMatch(TokenType.Keyword, "float"),
+                    //new TokenMatch(TokenType.Keyword, "double"),
+                    //new TokenMatch(TokenType.Keyword, "decimal"),
+                    //new TokenMatch(TokenType.Keyword, "char"),
                     new TokenMatch(TokenType.Keyword, "try"),
                     new TokenMatch(TokenType.Keyword, "catch"),
 

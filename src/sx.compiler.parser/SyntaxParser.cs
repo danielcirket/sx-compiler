@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using Sx.Compiler.Abstractions;
+using Sx.Compiler.Lexer.Abstractions;
 using Sx.Compiler.Parser.Syntax;
 using Sx.Compiler.Parser.Syntax.Declarations;
 using Sx.Compiler.Parser.Syntax.Expressions;
 using Sx.Compiler.Parser.Syntax.Statements;
+using Sx.Lexer;
 using Sx.Lexer.Abstractions;
 using Sxc.Compiler.Parser.Abstractions;
 
 namespace Sx.Compiler.Parser
 {
-    public class Parser
+    public class SyntaxParser
     {
+        private readonly ITokenizer _tokenizer;
         private readonly IErrorSink _errorSink;
         private ISourceFile _sourceFile;
         private ParserOptions _options;
@@ -25,16 +28,13 @@ namespace Sx.Compiler.Parser
         private IToken _last => Peek(-1);
         private IToken _next => Peek(1);
 
-        public SyntaxNode Parse(ISourceFile sourceFile, IEnumerable<IToken> tokens)
+        public SyntaxNode Parse(ISourceFile sourceFile)
         {
-            if (tokens == null)
-                throw new ArgumentNullException(nameof(tokens));
-
             if (sourceFile == null)
                 throw new ArgumentNullException(nameof(sourceFile));
 
             _sourceFile = sourceFile;
-            _tokens = tokens.Where(t => !t.IsTrivia());
+            _tokens = _tokenizer.Tokenize(sourceFile).Where(t => !t.IsTrivia()).ToList();
             _index = 0;
 
             try
@@ -46,10 +46,43 @@ namespace Sx.Compiler.Parser
                 return null;
             }
         }
+        public CompilationUnit Parse(IEnumerable<ISourceFile> sourceFiles)
+        {
+            if (sourceFiles == null)
+                throw new ArgumentNullException(nameof(sourceFiles));
+
+            var children = new List<SyntaxNode>();
+
+            // TODO(Dan): Do this in parallel!
+            foreach (var file in sourceFiles)
+            {
+                _sourceFile = file;
+                _tokens = _tokenizer.Tokenize(file).Where(t => !t.IsTrivia()).ToList();
+                _index = 0;
+
+                try
+                {
+                    children.Add(ParseInternal());
+                }
+                catch (SyntaxException ex)
+                {
+
+                }
+            }
+
+            return new CompilationUnit(null, children);
+        }
 
         private SyntaxNode ParseInternal()
         {
             return ParseDocument();
+        }
+        private bool IsMakingProgress(int lastTokenPosition)
+        {
+            if (_index > lastTokenPosition)
+                return true;
+
+            return false;
         }
         private IToken Peek(int ahead)
         {
@@ -90,17 +123,12 @@ namespace Sx.Compiler.Parser
         {
             if (_current.TokenType != TokenType.Keyword && _current.Value != keyword)
                 throw UnexpectedToken(keyword);
-            
+
             return Take();
         }
         private IToken TakeSemicolon()
         {
-            if (_current.TokenType == TokenType.Semicolon)
-            {
-                return Take(TokenType.Semicolon);
-            }
-
-            return _current;
+            return Take(TokenType.Semicolon);
         }
 
         #endregion
@@ -117,9 +145,16 @@ namespace Sx.Compiler.Parser
         {
             try
             {
+                var startIndex = _index;
+
                 while (_current.TokenType != closeType && _current.TokenType != TokenType.EOF)
                 {
                     action();
+
+                    if (!IsMakingProgress(startIndex))
+                        throw SyntaxError(Severity.Error, $"Unexpected token '{_current.Value}'", CreateSpan(_current.SourceFilePart.Start));
+
+                    startIndex = _index;
                 }
             }
             catch (SyntaxException)
@@ -169,9 +204,12 @@ namespace Sx.Compiler.Parser
 
             List<IdentifierExpression> moduleNameParts = new List<IdentifierExpression>();
 
-            while(_current.TokenType == TokenType.Identifier && _current.TokenType != TokenType.Semicolon)
+            while (_current.TokenType == TokenType.Identifier && _current.TokenType != TokenType.Semicolon)
             {
                 moduleNameParts.Add(new IdentifierExpression(CreateSpan(_current.SourceFilePart.Start), ParseName()));
+
+                if (_current.TokenType != TokenType.Dot && _current.TokenType != TokenType.Semicolon)
+                    throw UnexpectedToken("'.' or ';'");
 
                 if (_current.TokenType == TokenType.Dot)
                     Advance();
@@ -303,28 +341,15 @@ namespace Sx.Compiler.Parser
         {
             if (_current.TokenType == TokenType.LeftBracket)
             {
-                return ParseScope();
+                var result = ParseScope();
+
+                return result;
             }
             else
             {
                 var start = _current;
 
-                SyntaxNode expr = null;
-
-                if (start.Category == TokenCategory.Identifier || start.Category == TokenCategory.Constant)
-                {
-                    expr = ParseReturnStatement(takeKeyword: false);
-
-                    if (_current.TokenType == TokenType.Semicolon)
-                        TakeSemicolon();
-                }
-                else
-                {
-                    expr = ParseExpression();
-                }
-
-                
-                return new BlockStatement(CreateSpan(start), new[] { expr });
+                return new BlockStatement(CreateSpan(start), new[] { ParseExpression() });
             }
         }
         private ForStatement ParseForStatement()
@@ -734,6 +759,9 @@ namespace Sx.Compiler.Parser
 
             var body = ParseExpressionOrScope();
 
+            if (_current.TokenType != TokenType.Semicolon)
+                throw UnexpectedToken(TokenType.Semicolon);
+
             return new LambdaExpression(CreateSpan(start), arguments, body);
         }
         private Expression ParseLogicalExpression()
@@ -901,12 +929,12 @@ namespace Sx.Compiler.Parser
                 {
                     return ParseMethodCallExpression();
                 }
+                else if (_next.TokenType == TokenType.LeftBrace)
+                {
+                    return ParseArrayAccessExpression(ParseIdentiferExpression());
+                }
                 return ParseIdentiferExpression();
             }
-            //else if (_next.Category == TokenCategory.Grouping)
-            //{
-            //    throw UnexpectedToken("");
-            //}
             else if (_current.Category == TokenCategory.Constant || _current.Value == "true" || _current.Value == "false")
             {
                 return ParseConstantExpression();
@@ -919,6 +947,10 @@ namespace Sx.Compiler.Parser
             {
                 return ParseNewExpression();
             }
+            else if (_current.TokenType == TokenType.Semicolon && _last.Value == "return")
+            {
+                return null;
+            }
             else
             {
                 if (_current.Category == TokenCategory.Operator)
@@ -929,6 +961,7 @@ namespace Sx.Compiler.Parser
 
                     throw SyntaxError(Severity.Error, $"'{token.Value}' is an invalid expression term", token.SourceFilePart);
                 }
+
                 throw UnexpectedToken("Expression Term");
             }
         }
@@ -1036,7 +1069,13 @@ namespace Sx.Compiler.Parser
 
         private string ParseName()
         {
-            return Take(TokenType.Identifier).Value;
+            if (_current.TokenType == TokenType.Identifier)
+                return Take(TokenType.Identifier).Value;
+
+            if (_current.IsTypeKeyword())
+                return Take(TokenType.Keyword).Value;
+
+            throw UnexpectedToken("Type keyword or identifier");
         }
         private DeclarationVisibility? ParseVisibility(bool optional = false)
         {
@@ -1062,8 +1101,8 @@ namespace Sx.Compiler.Parser
         {
             var start = Take("module");
 
-            List<IdentifierExpression> moduleNameParts = new List<IdentifierExpression>();
-            List<ClassDeclaration> contents = new List<ClassDeclaration>();
+            var moduleNameParts = new List<IdentifierExpression>();
+            var contents = new List<Declaration>();
 
             while (_current.TokenType == TokenType.Identifier)
             {
@@ -1075,25 +1114,42 @@ namespace Sx.Compiler.Parser
 
             MakeBlock(() =>
             {
-                var visibility = ParseVisibility();
+                var visibility = ParseVisibility(optional: false);
 
-                while (_current.Value == "class")
+                // TODO(Dan): Allow stand-alone functions in a module!
+
+                while (_current.Value == "class" || _current.IsTypeKeyword() || _current.TokenType == TokenType.Identifier)
                 {
-                    contents.Add(ParseClassDeclaration(visibility.Value));
+
+                    if (_current.Value == "class")
+                    {
+                        contents.Add(ParseClassDeclaration(visibility.Value));
+                    }
+                    else
+                    {
+                        var returnType = ParseTypeDeclaration();
+                        var name = ParseName();
+                        contents.Add(ParseMethodDeclaration(visibility.Value, name, returnType));
+                    }
+
                 }
             });
 
-            return new ModuleDeclaration(CreateSpan(start.SourceFilePart.Start), string.Join(".", moduleNameParts.Select(identifier => identifier.Identifier)), contents);            
+            return new ModuleDeclaration(CreateSpan(start.SourceFilePart.Start), string.Join(".", moduleNameParts.Select(identifier => identifier.Identifier)), contents);
         }
         private ClassDeclaration ParseClassDeclaration(DeclarationVisibility visibility)
         {
-            List<ConstructorDeclaration> ctors = new List<ConstructorDeclaration>();
-            List<PropertyDeclaration> props = new List<PropertyDeclaration>();
-            List<MethodDeclaration> methods = new List<MethodDeclaration>();
-            List<FieldDeclaration> fields = new List<FieldDeclaration>();
+            var ctors = new List<ConstructorDeclaration>();
+            var props = new List<PropertyDeclaration>();
+            var methods = new List<MethodDeclaration>();
+            var fields = new List<FieldDeclaration>();
+            var typeParameters = new List<TypeDeclaration>();
 
             var start = TakeKeyword("class");
             var name = ParseName();
+
+            if (_current.TokenType == TokenType.LessThan)
+                typeParameters.AddRange(ParseGenericTypes());
 
             MakeBlock(() =>
             {
@@ -1118,28 +1174,36 @@ namespace Sx.Compiler.Parser
                 }
             });
 
-            return new ClassDeclaration(CreateSpan(start), name, visibility, ctors, fields, methods, props);
+            return new ClassDeclaration(CreateSpan(start), name, visibility, ctors, fields, methods, props, typeParameters);
         }
         private SyntaxNode ParseClassMember()
         {
             var visibility = ParseVisibility();
 
+            if (_current.Value == "constructor")
+            {
+                return ParseConstructorDeclaration(visibility.Value);
+            }
+
+            var returnType = ParseTypeDeclaration();
+            var name = ParseName();
+
             switch (_current.Value)
             {
-                case "property":
-                    return ParsePropertyDeclaration(visibility.Value);
+                case "{":
+                case "=>":
+                    return ParsePropertyDeclaration(visibility.Value, name, returnType);
 
-                case "function":
-                    return ParseMethodDeclaration(visibility.Value);
-
-                case "constructor":
-                    return ParseConstructorDeclaration(visibility.Value);
-
-                case "field":
-                    return ParseFieldDeclaration(visibility.Value);
+                case "(":
+                case "<":
+                    return ParseMethodDeclaration(visibility.Value, name, returnType);
+                   
+                case ";":
+                case "=":
+                    return ParseFieldDeclaration(visibility.Value, name, returnType);
 
                 default:
-                    throw UnexpectedToken("property', 'function', 'constructor' or 'field");
+                    throw UnexpectedToken("Field, Property or Method Declaration: '{', '=>', '(', '<', ';', '='");
             }
         }
         private ConstructorDeclaration ParseConstructorDeclaration(DeclarationVisibility visibility)
@@ -1168,20 +1232,16 @@ namespace Sx.Compiler.Parser
 
             if (_current.TokenType != TokenType.EOF)
             {
-                AddError(Severity.Error, "Top-level statements are not permitted", CreateSpan(_current.SourceFilePart.Start, _tokens.Last().SourceFilePart.End));
+                // TODO(Dan): Need to have a better error message here...
+                AddError(Severity.Error, "Top-level statements are not permitted. Statements must be part of a module except for import statements which are at the top of the file", CreateSpan(_current.SourceFilePart.Start, _tokens.Last().SourceFilePart.End));
             }
 
             return new SourceDocument(CreateSpan(start), _sourceFile, contents);
         }
-        private FieldDeclaration ParseFieldDeclaration(DeclarationVisibility visibility)
+        private FieldDeclaration ParseFieldDeclaration(DeclarationVisibility visibility, string name, TypeDeclaration type)
         {
-            var start = _current.SourceFilePart.Start;
+            var start = _current;
 
-            Take("field");
-
-            var type = ParseTypeDeclaration();
-
-            var name = ParseName();
             Expression defaultValue = null;
             if (_current.TokenType == TokenType.Assignment)
             {
@@ -1199,7 +1259,7 @@ namespace Sx.Compiler.Parser
             {
                 Take();
                 var expr = ParseExpression();
-                TakeSemicolon();
+                //TakeSemicolon();
                 return new BlockStatement(expr.FilePart, new[] { expr });
             }
             else
@@ -1207,15 +1267,30 @@ namespace Sx.Compiler.Parser
                 return ParseScope();
             }
         }
-        private MethodDeclaration ParseMethodDeclaration(DeclarationVisibility visibility)
+        private MethodDeclaration ParseMethodDeclaration(DeclarationVisibility visibility, string name, TypeDeclaration returnType)
         {
-            var start = TakeKeyword("function");
-            var returnType = ParseTypeDeclaration();
-            var name = ParseName();
+            var start = _current;
+            //var returnType = ParseTypeDeclaration();
+            //var name = ParseName();
+            var genericTypes = Enumerable.Empty<TypeDeclaration>();
+
+            if (_current.TokenType == TokenType.LessThan)
+                genericTypes = ParseGenericTypes().ToList();
+
             var parameters = ParseParameterList();
+
+            if (_current.TokenType == TokenType.FatArrow)
+            {
+                var method = ParseExpressionBodiedMember(name, visibility, returnType, parameters);
+
+                TakeSemicolon();
+
+                return method;
+            }
+            
             var body = ParseLambdaOrScope();
 
-            return new MethodDeclaration(CreateSpan(start), name, visibility, returnType, parameters, body);
+            return new MethodDeclaration(CreateSpan(start), name, visibility, returnType, genericTypes, parameters, body);
         }
         private ParameterDeclaration ParseParameterDeclaration()
         {
@@ -1249,18 +1324,23 @@ namespace Sx.Compiler.Parser
 
             return parameters;
         }
-        private PropertyDeclaration ParsePropertyDeclaration(DeclarationVisibility visibility)
+        private PropertyDeclaration ParsePropertyDeclaration(DeclarationVisibility visibility, string name, TypeDeclaration type)
         {
-            var start = TakeKeyword("property");
-            var type = ParseTypeDeclaration();
-            var name = ParseName();
+            var start = _current;
+            //var type = ParseTypeDeclaration();
+            //var name = ParseName();
 
             MethodDeclaration getMethod = null;
             MethodDeclaration setMethod = null;
 
             if (_current.TokenType == TokenType.FatArrow)
             {
-                getMethod = ParseLambdaExpression(_current.SourceFilePart.Start, new ParameterDeclaration[0]).ToMethodDeclaration($"get_{name}", type.Name, visibility);
+                // TODO(Dan): Implement expression bodied members
+                //throw new NotImplementedException("Expression bodied members are currently not implemented");
+                getMethod = ParseExpressionBodiedMember(methodName: $"get_{name}", visibility: visibility, returnType: type, parameters: new ParameterDeclaration[0]);
+                
+
+                TakeSemicolon();
             }
             else
             {
@@ -1274,52 +1354,72 @@ namespace Sx.Compiler.Parser
                             {
                                 var getStart = Take();
 
-                                if (_current.TokenType == TokenType.Semicolon)
+                                switch(_current.TokenType)
                                 {
-                                    // TODO(Dan): { get; } compiler will need to auto generate this and the backing field
+                                    case TokenType.Semicolon:
+                                        throw new NotImplementedException("Bodyless property getter not yet supported");
+
+                                    // TODO(Dan): Expression bodied members
+                                    case TokenType.FatArrow:
+                                        getMethod = ParseExpressionBodiedMember(methodName: $"get_{name}", visibility: visibility, returnType: type, parameters: new ParameterDeclaration[0]);
+                                        TakeSemicolon();
+                                        break;
+
+                                    default:
+                                        {
+                                            var body = ParseLambdaOrScope();
+                                            if (getMethod != null)
+                                            {
+                                                AddError(Severity.Error, "Multiple getters", CreateSpan(getStart));
+                                            }
+                                            else
+                                            {
+                                                getMethod = new MethodDeclaration(CreateSpan(getStart), $"get_{name}", visibility, type, new ParameterDeclaration[0], body);
+                                            }
+                                        }
+                                        break;
                                 }
-                                else
-                                {
-                                    var body = ParseLambdaOrScope();
-                                    if (getMethod != null)
-                                    {
-                                        AddError(Severity.Error, "Multiple getters", CreateSpan(getStart));
-                                    }
-                                    else
-                                    {
-                                        getMethod = new MethodDeclaration(CreateSpan(getStart), $"get_{name}", visibility, type, new ParameterDeclaration[0], body);
-                                    }
-                                }
+
                                 break;
                             }
                         case "set":
                             {
                                 var setStart = Take();
 
-                                if (_current.TokenType == TokenType.Semicolon)
+                                switch (_current.TokenType)
                                 {
-                                    // TODO(Dan): { get; set; } compiler will need to auto generate this setter
-                                }
-                                else
-                                {
-                                    var body = ParseLambdaOrScope();
-                                    if (setMethod != null)
-                                    {
-                                        AddError(Severity.Error, "Multiple setters", CreateSpan(setStart));
-                                    }
-                                    else
-                                    {
-                                        setMethod = new MethodDeclaration(CreateSpan(setStart), $"set_{name}", setVisibility ?? visibility, new TypeDeclaration(null, "void"),
+                                    case TokenType.Semicolon:
+                                        throw new NotImplementedException("Bodyless property setter not yet supported");
+
+                                    // TODO(Dan): Expression bodied members
+                                    case TokenType.FatArrow:
+                                        setMethod = ParseExpressionBodiedMember(methodName: $"set_{name}", visibility: setVisibility ?? visibility, returnType: new TypeDeclaration(null, "void"), parameters: new[] { new ParameterDeclaration(setStart.SourceFilePart, "value", type) });
+                                        TakeSemicolon();
+                                        break;
+
+                                    default:
+                                        {
+                                            var body = ParseLambdaOrScope();
+                                            if (setMethod != null)
+                                            {
+                                                AddError(Severity.Error, "Multiple setters", CreateSpan(setStart));
+                                            }
+                                            else
+                                            {
+                                                setMethod = new MethodDeclaration(CreateSpan(setStart), $"set_{name}", setVisibility ?? visibility, new TypeDeclaration(null, "void"),
                                                                           new[] { new ParameterDeclaration(setStart.SourceFilePart, "value", type) }, body);
-                                    }
+                                            }
+                                        }
+                                        break;
                                 }
+
                                 break;
                             }
                         default:
                             throw UnexpectedToken("get or set");
                     }
 
-                   
+
                 });
             }
 
@@ -1339,21 +1439,61 @@ namespace Sx.Compiler.Parser
         }
         private TypeDeclaration ParseTypeDeclaration()
         {
-            //if (_current.TokenType != TokenType.LessThan)
-            //{
-            //    throw UnexpectedToken("Type Annotation");
-            //}
-            //Take(TokenType.LessThan);
-            //var identifier = ;
-            //Take(TokenType.GreaterThan);
+            var name = ParseName();
 
-            return new TypeDeclaration(_current.SourceFilePart, ParseName());
+            switch (_current.TokenType)
+            {
+                case TokenType.Dot:
+                    {
+                        while (_current.TokenType == TokenType.Dot)
+                        {
+                            Advance();
+                            name += ".";
+
+                            name += ParseName();
+                        }
+                    }
+                    break;
+
+                case TokenType.LeftBrace:
+                    {
+                        if (_next.TokenType == TokenType.RightBrace)
+                        {
+                            name += "[]";
+
+                            Advance();
+                            Advance();
+                        }
+                        else
+                        {
+                            throw UnexpectedToken("']'");
+                        }
+                    }
+                    break;
+
+                case TokenType.LessThan:
+                    {
+                        name += "<";
+
+                        var genericTypes = ParseGenericTypes().Select(t => t.Name);
+
+                        name += string.Join(", ", genericTypes);
+
+                        name += ">";
+                    }
+                    break;
+
+                //default:
+                //    throw UnexpectedToken("'.', '[]', '<' or '>'");
+            }
+            
+            return new TypeDeclaration(_current.SourceFilePart, name);
         }
         private VariableDeclaration ParseVariableDeclaration()
         {
             var start = TakeKeyword("var");
             var name = ParseName();
-            var type = new TypeDeclaration(null, "Object");
+            var type = new TypeDeclaration(null, "object");
             Expression value = null;
 
             // NOTE(Dan): If we want var name : string = "";
@@ -1371,7 +1511,36 @@ namespace Sx.Compiler.Parser
 
             return new VariableDeclaration(CreateSpan(start), name, type, value);
         }
+        private IEnumerable<TypeDeclaration> ParseGenericTypes()
+        {
+            Take(TokenType.LessThan);
 
+            yield return new TypeDeclaration(CreateSpan(_current.SourceFilePart.Start), ParseName());
+
+            while (_current.TokenType == TokenType.Comma)
+            {
+                Take(TokenType.Comma);
+
+                yield return new TypeDeclaration(CreateSpan(_current.SourceFilePart.Start), ParseName());
+            }
+
+            Take(TokenType.GreaterThan);
+        }
+        private MethodDeclaration ParseExpressionBodiedMember(string methodName, DeclarationVisibility visibility, TypeDeclaration returnType, IEnumerable<ParameterDeclaration> parameters)
+        {
+            Take(TokenType.FatArrow);
+
+            var expression = ParseExpression();
+            var span = CreateSpan(expression.FilePart.Start, expression.FilePart.End);
+
+            ReturnStatement returnStatement = null;
+
+            if (returnType.Name != "void")
+                returnStatement = new ReturnStatement(span, expression);
+
+            return new MethodDeclaration(span, methodName, visibility, returnType, parameters, new BlockStatement(span, new[] { (SyntaxNode)returnStatement ?? expression }));
+        }
+        
         #endregion
 
         #region Create Span
@@ -1399,11 +1568,11 @@ namespace Sx.Compiler.Parser
 
         private void AddError(Severity severity, string message, ISourceFilePart span = null)
         {
-            _errorSink.AddError(message, span, severity);
+            _errorSink.AddError($"{message} in '{_sourceFile.Name}'", span, severity);
         }
         private SyntaxException UnexpectedToken(TokenType expected)
         {
-            return UnexpectedToken(expected.GetValue());
+            return UnexpectedToken($"'{expected.GetValue()}'");
         }
         private SyntaxException UnexpectedToken(string expected)
         {
@@ -1413,7 +1582,7 @@ namespace Sx.Compiler.Parser
                 ? _last?.TokenType.ToString()
                 : _last?.Value;
 
-            var message = $"Unexpected '{value}'. Expected '{expected}'";
+            var message = $"Unexpected '{value}'. Expected {expected}";
 
             return SyntaxError(Severity.Error, message, _last.SourceFilePart);
         }
@@ -1426,14 +1595,23 @@ namespace Sx.Compiler.Parser
 
         #endregion
 
-        public Parser(Action<ParserOptions> options, IErrorSink errorSink)
+        public SyntaxParser() : this(options => { }, new Tokenizer(TokenizerGrammar.Default), new ErrorSink())
+        {
+
+        }
+        public SyntaxParser(ITokenizer tokenizer) : this(options => { }, tokenizer, tokenizer.ErrorSink) { }
+        public SyntaxParser(Action<ParserOptions> options, ITokenizer tokenizer, IErrorSink errorSink)
         {
             if (options == null)
                 throw new ArgumentNullException(nameof(options));
 
+            if (tokenizer == null)
+                throw new ArgumentNullException(nameof(tokenizer));
+
             if (errorSink == null)
                 throw new ArgumentNullException(nameof(errorSink));
 
+            _tokenizer = tokenizer;
             _errorSink = errorSink;
             _options = new ParserOptions();
 

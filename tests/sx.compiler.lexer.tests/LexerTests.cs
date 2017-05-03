@@ -9,28 +9,28 @@ using Xunit;
 
 namespace Sx.Compiler.Lexer.Tests
 {
-    public class LexerTests
+    public partial class LexerTests
     {
         public class Constructor
         {
             [Fact]
             public void WhenGrammarIsNullThenShouldThrowArgumentNullException()
             {
-                Action act = () => new Sx.Lexer.Lexer(null);
+                Action act = () => new Sx.Lexer.Tokenizer(null);
 
                 act.ShouldThrow<ArgumentNullException>();
             }
             [Fact]
             public void WhenErrorSinkIsNullThenShouldThrowArgumentNullException()
             {
-                Action act = () => new Sx.Lexer.Lexer(new TokenizerGrammar(), null);
+                Action act = () => new Sx.Lexer.Tokenizer(TokenizerGrammar.Default, null);
 
                 act.ShouldThrow<ArgumentNullException>();
             }
             [Fact]
             public void WhenGrammarAndErrorSinkAreNotNullThenShouldContructLexer()
             {
-                var result = new Sx.Lexer.Lexer(new TokenizerGrammar());
+                var result = new Sx.Lexer.Tokenizer(TokenizerGrammar.Default);
 
                 result.Should().NotBeNull();
             }
@@ -41,14 +41,14 @@ namespace Sx.Compiler.Lexer.Tests
             [Fact]
             public void WhenSourceFileIsNullThenShouldThrowArgumentNullException()
             {
-                Action act = () => new Sx.Lexer.Lexer(new TokenizerGrammar()).Tokenize((ISourceFile)null);
+                Action act = () => new Sx.Lexer.Tokenizer(TokenizerGrammar.Default).Tokenize((ISourceFile)null);
 
                 act.ShouldThrow<ArgumentNullException>();
             }
             [Fact]
             public void WhenSourceFileContentPassedAsStringIsNullThenShouldThrowArgumentNullException()
             {
-                Action act = () => new Sx.Lexer.Lexer(new TokenizerGrammar()).Tokenize((string)null);
+                Action act = () => new Sx.Lexer.Tokenizer(TokenizerGrammar.Default).Tokenize((string)null);
 
                 act.ShouldThrow<ArgumentNullException>();
             }
@@ -57,7 +57,7 @@ namespace Sx.Compiler.Lexer.Tests
             {
                 var input = '\0'.ToString();
 
-                var result = new Sx.Lexer.Lexer(new TokenizerGrammar()).Tokenize(input).ToList();
+                var result = new Sx.Lexer.Tokenizer(TokenizerGrammar.Default).Tokenize(input).ToList();
 
                 result.Count.Should().Be(1);
                 result[0].TokenType.Should().Be(TokenType.EOF);
@@ -67,7 +67,7 @@ namespace Sx.Compiler.Lexer.Tests
             {
                 var input = '\n'.ToString();
 
-                var result = new Sx.Lexer.Lexer(new TokenizerGrammar()).Tokenize(input).ToList();
+                var result = new Sx.Lexer.Tokenizer(TokenizerGrammar.Default).Tokenize(input).ToList();
 
                 result.Count.Should().Be(2);
                 result[0].TokenType.Should().Be(TokenType.NewLine);
@@ -78,7 +78,7 @@ namespace Sx.Compiler.Lexer.Tests
             {
                 var input = '\t'.ToString();
 
-                var result = new Sx.Lexer.Lexer(new TokenizerGrammar()).Tokenize(input).ToList();
+                var result = new Sx.Lexer.Tokenizer(TokenizerGrammar.Default).Tokenize(input).ToList();
 
                 result.Count.Should().Be(2);
                 result[0].TokenType.Should().Be(TokenType.Whitespace);
@@ -89,7 +89,7 @@ namespace Sx.Compiler.Lexer.Tests
             {
                 var input = '1'.ToString();
 
-                var result = new Sx.Lexer.Lexer(new TokenizerGrammar()).Tokenize(input).ToList();
+                var result = new Sx.Lexer.Tokenizer(TokenizerGrammar.Default).Tokenize(input).ToList();
 
                 result.Count.Should().Be(2);
                 result[0].TokenType.Should().Be(TokenType.IntegerLiteral);
@@ -100,7 +100,7 @@ namespace Sx.Compiler.Lexer.Tests
             {
                 var input = "1f";
 
-                var result = new Sx.Lexer.Lexer(new TokenizerGrammar()).Tokenize(input).ToList();
+                var result = new Sx.Lexer.Tokenizer(TokenizerGrammar.Default).Tokenize(input).ToList();
 
                 result.Count.Should().Be(2);
                 result[0].TokenType.Should().Be(TokenType.RealLiteral);
@@ -111,7 +111,7 @@ namespace Sx.Compiler.Lexer.Tests
             {
                 var input = "1.0m";
 
-                var result = new Sx.Lexer.Lexer(new TokenizerGrammar()).Tokenize(input).ToList();
+                var result = new Sx.Lexer.Tokenizer(TokenizerGrammar.Default).Tokenize(input).ToList();
 
                 result.Count.Should().Be(2);
                 result[0].TokenType.Should().Be(TokenType.RealLiteral);
@@ -122,7 +122,7 @@ namespace Sx.Compiler.Lexer.Tests
             {
                 var input = "1.0";
 
-                var result = new Sx.Lexer.Lexer(new TokenizerGrammar()).Tokenize(input).ToList();
+                var result = new Sx.Lexer.Tokenizer(TokenizerGrammar.Default).Tokenize(input).ToList();
 
                 result.Count.Should().Be(2);
                 result[0].TokenType.Should().Be(TokenType.RealLiteral);
@@ -133,7 +133,7 @@ namespace Sx.Compiler.Lexer.Tests
             {
                 var input = "1e10f";
 
-                var result = new Sx.Lexer.Lexer(new TokenizerGrammar()).Tokenize(input).ToList();
+                var result = new Sx.Lexer.Tokenizer(TokenizerGrammar.Default).Tokenize(input).ToList();
 
                 result.Count.Should().Be(2);
                 result[0].TokenType.Should().Be(TokenType.RealLiteral);
@@ -144,7 +144,7 @@ namespace Sx.Compiler.Lexer.Tests
             {
                 var input = "# This is a single line comment";
 
-                var result = new Sx.Lexer.Lexer(new TokenizerGrammar()).Tokenize(input).ToList();
+                var result = new Sx.Lexer.Tokenizer(TokenizerGrammar.Default).Tokenize(input).ToList();
 
                 result.Count.Should().Be(2);
                 result[0].TokenType.Should().Be(TokenType.LineComment);
@@ -157,7 +157,7 @@ namespace Sx.Compiler.Lexer.Tests
                                * This is a second Line
                                */";
 
-                var result = new Sx.Lexer.Lexer(new TokenizerGrammar()).Tokenize(input).ToList();
+                var result = new Sx.Lexer.Tokenizer(TokenizerGrammar.Default).Tokenize(input).ToList();
 
                 result.Count.Should().Be(2);
                 result[0].TokenType.Should().Be(TokenType.BlockComment);
@@ -168,7 +168,7 @@ namespace Sx.Compiler.Lexer.Tests
             {
                 var input = @"identifier";
 
-                var result = new Sx.Lexer.Lexer(new TokenizerGrammar()).Tokenize(input).ToList();
+                var result = new Sx.Lexer.Tokenizer(TokenizerGrammar.Default).Tokenize(input).ToList();
 
                 result.Count.Should().Be(2);
                 result[0].TokenType.Should().Be(TokenType.Identifier);
@@ -179,7 +179,7 @@ namespace Sx.Compiler.Lexer.Tests
             {
                 var input = @"class";
 
-                var result = new Sx.Lexer.Lexer(new TokenizerGrammar
+                var result = new Sx.Lexer.Tokenizer(new TokenizerGrammar
                 {
                     Keywords = new List<TokenMatch>
                     {
@@ -196,7 +196,7 @@ namespace Sx.Compiler.Lexer.Tests
             {
                 var input = @"'a'";
 
-                var result = new Sx.Lexer.Lexer(new TokenizerGrammar()).Tokenize(input).ToList();
+                var result = new Sx.Lexer.Tokenizer(TokenizerGrammar.Default).Tokenize(input).ToList();
 
                 result.Count.Should().Be(2);
                 result[0].TokenType.Should().Be(TokenType.CharLiteral);
@@ -207,7 +207,7 @@ namespace Sx.Compiler.Lexer.Tests
             {
                 var input = "\"string literal\"";
 
-                var result = new Sx.Lexer.Lexer(new TokenizerGrammar()).Tokenize(input).ToList();
+                var result = new Sx.Lexer.Tokenizer(TokenizerGrammar.Default).Tokenize(input).ToList();
 
                 result.Count.Should().Be(2);
                 result[0].TokenType.Should().Be(TokenType.StringLiteral);
@@ -220,7 +220,7 @@ namespace Sx.Compiler.Lexer.Tests
 
                 foreach (var character in input)
                 {
-                    var result = new Sx.Lexer.Lexer(new TokenizerGrammar()).Tokenize(character.ToString()).ToList();
+                    var result = new Sx.Lexer.Tokenizer(TokenizerGrammar.Default).Tokenize(character.ToString()).ToList();
                     result.Count.Should().Be(2);
 
                     var matchingTokenType = GetPunctuationTokenType(character);
@@ -235,7 +235,7 @@ namespace Sx.Compiler.Lexer.Tests
             {
                 var input = "1z";
 
-                var result = new Sx.Lexer.Lexer(new TokenizerGrammar()).Tokenize(input).ToList();
+                var result = new Sx.Lexer.Tokenizer(TokenizerGrammar.Default).Tokenize(input).ToList();
 
                 result.Count.Should().Be(2);
                 result[0].TokenType.Should().Be(TokenType.Error);
@@ -246,7 +246,7 @@ namespace Sx.Compiler.Lexer.Tests
             {
                 var input = "1ff";
 
-                var result = new Sx.Lexer.Lexer(new TokenizerGrammar()).Tokenize(input).ToList();
+                var result = new Sx.Lexer.Tokenizer(TokenizerGrammar.Default).Tokenize(input).ToList();
 
                 result.Count.Should().Be(2);
                 result[0].TokenType.Should().Be(TokenType.Error);
@@ -257,7 +257,7 @@ namespace Sx.Compiler.Lexer.Tests
             {
                 var input = "~";
 
-                var result = new Sx.Lexer.Lexer(new TokenizerGrammar()).Tokenize(input).ToList();
+                var result = new Sx.Lexer.Tokenizer(TokenizerGrammar.Default).Tokenize(input).ToList();
 
                 result.Count.Should().Be(2);
                 result[0].TokenType.Should().Be(TokenType.Error);
@@ -268,7 +268,7 @@ namespace Sx.Compiler.Lexer.Tests
             {
                 var input = "~";
 
-                var lexer = new Sx.Lexer.Lexer(new TokenizerGrammar());
+                var lexer = new Sx.Lexer.Tokenizer(TokenizerGrammar.Default);
 
                 var result = lexer.Tokenize(input).ToList();
 

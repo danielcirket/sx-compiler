@@ -5,6 +5,8 @@
         Expression,
         Statement,
         Declaration,
-        Document
+        Document,
+        CompilationUnit,
+        Unknown
     }
 }

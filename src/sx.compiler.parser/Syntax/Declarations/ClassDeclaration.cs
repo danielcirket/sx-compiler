@@ -11,11 +11,14 @@ namespace Sx.Compiler.Parser.Syntax.Declarations
         public override SyntaxKind Kind => SyntaxKind.ClassDeclaration;
         public IEnumerable<MethodDeclaration> Methods { get; }
         public IEnumerable<PropertyDeclaration> Properties { get; }
+        public IEnumerable<TypeDeclaration> TypeDeclarations { get; }
+        
 
         public ClassDeclaration(ISourceFilePart span, string name, DeclarationVisibility visiblilty, IEnumerable<ConstructorDeclaration> constructors,
                                 IEnumerable<FieldDeclaration> fields,
                                 IEnumerable<MethodDeclaration> methods,
-                                IEnumerable<PropertyDeclaration> properties)
+                                IEnumerable<PropertyDeclaration> properties,
+                                IEnumerable<TypeDeclaration> typeDeclarations)
             : base(span, name)
         {
             Visibility = visiblilty;
@@ -23,6 +26,7 @@ namespace Sx.Compiler.Parser.Syntax.Declarations
             Fields = fields;
             Methods = methods;
             Properties = properties;
+            TypeDeclarations = typeDeclarations;
         }
     }
 }

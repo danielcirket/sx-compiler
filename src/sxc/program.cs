@@ -2,7 +2,7 @@ using System;
 
 namespace sxc
 {
-    class program
+    class Program
     {
         static void Main(string[] args)
         {

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Sx.Compiler.Abstractions
 {
@@ -8,7 +9,9 @@ namespace Sx.Compiler.Abstractions
         private List<IError> _errors;
 
         public IEnumerable<IError> Errors => _errors.AsReadOnly();
-        public bool HasErrors => _errors.Count > 0;
+        public bool HasErrors => _errors.Any(error => error.Severity == Severity.Error);
+        public bool HasWarnings => _errors.Any(error => error.Severity == Severity.Warning);
+        public bool HasMessage => _errors.Any(error => error.Severity == Severity.Message);
 
         public void AddError(string message, ISourceFilePart sourceFilePart, Severity severity)
         {

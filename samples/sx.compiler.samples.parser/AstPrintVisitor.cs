@@ -13,27 +13,42 @@ namespace Sx.Compiler.Samples.Parser
     {
         private int _indent = 0;
 
-        protected override void VisitArithmetic(BinaryExpression expression)
+        private void Print(string text)
         {
             var result = string.Empty;
 
             for (var i = 0; i < _indent; i++)
-                result += "    ";
+            {
 
-            result += $"ARITHMATIC BINARY EXPRESION";
+                if (i == _indent - 1 && text != string.Empty)
+                { 
+                    result += "  \u2517";
+                }
+                else
+                {
+                    if (_indent > 0)
+                    {
+
+                    }
+
+                    result += "  ";
+                }
+            }
+
+            result += text;
 
             Console.WriteLine(result);
+        }
+
+        protected override void VisitArithmetic(BinaryExpression expression)
+        {
+            Print($" ARITHMATIC BINARY EXPRESION");
 
             _indent++;
 
             Visit(expression.Left);
 
-            result = string.Empty;
-
-            for (var i = 0; i < _indent; i++)
-                result += "    ";
-
-            Console.WriteLine(result += expression.Operator);
+            Print($" {expression.Operator}");
 
             Visit(expression.Right);
 
@@ -45,24 +60,13 @@ namespace Sx.Compiler.Samples.Parser
         }
         protected override void VisitAssignment(BinaryExpression expression)
         {
-            var result = string.Empty;
-
-            for (var i = 0; i < _indent; i++)
-                result += "    ";
-
-            result += $"ASSIGNMENT BINARY EXPRESION";
-
-            Console.WriteLine(result);
+            Print($" ASSIGNMENT BINARY EXPRESION");
 
             _indent++;
 
             Visit(expression.Left);
 
-            result = string.Empty;
-            for (var i = 0; i < _indent; i++)
-                result += "    ";
-
-            Console.WriteLine(result += " = ");
+            Print(" = ");
 
             Visit(expression.Right);
 
@@ -70,36 +74,21 @@ namespace Sx.Compiler.Samples.Parser
         }
         protected override void VisitBitwise(BinaryExpression expression)
         {
-            var result = string.Empty;
-
-            for (var i = 0; i < _indent; i++)
-                result += "    ";
-
-            result += $"BITWISE BINARY EXPRESION";
-
-            Console.WriteLine(result);
+            Print($" BITWISE BINARY EXPRESION");
 
             _indent++;
 
             Visit(expression.Left);
 
-            for (var i = 0; i < _indent; i++)
-                Console.Write("  ");
+            Print("");
 
             Visit(expression.Right);
 
             _indent--;
         }
         protected override void VisitBlock(BlockStatement statement)
-            {
-            var result = string.Empty;
-
-            for (var i = 0; i < _indent; i++)
-                result += "    ";
-
-            result += $"BLOCK: {statement.Kind}";
-
-            Console.WriteLine(result);
+        {
+            Print($" BLOCK: {statement.Kind}");
 
              _indent++;
 
@@ -108,14 +97,7 @@ namespace Sx.Compiler.Samples.Parser
 
             _indent--;
 
-            result = string.Empty;
-
-            for (var i = 0; i < _indent; i++)
-                result += "    ";
-
-            result += $"END BLOCK";
-
-            Console.WriteLine(result);
+            Print("");
         }
         protected override void VisitBreak(BreakStatement statement)
         {
@@ -127,14 +109,11 @@ namespace Sx.Compiler.Samples.Parser
         }
         protected override void VisitClass(ClassDeclaration classDeclaration)
         {
-            var result = string.Empty;
+            var genericTypes = classDeclaration.TypeDeclarations.Any()
+                ? $"<{string.Join(", ", classDeclaration.TypeDeclarations.Select(x => x.Name))}>"
+                : string.Empty;
 
-            for (var i = 0; i < _indent; i++)
-                result += "    ";
-
-            result += $"CLASS: {classDeclaration.Name}";
-
-            Console.WriteLine(result);
+            Print($" CLASS: {classDeclaration.Name}{genericTypes}");
 
             _indent++;
 
@@ -152,36 +131,15 @@ namespace Sx.Compiler.Samples.Parser
 
             _indent--;
 
-            result = string.Empty;
-
-            for (var i = 0; i < _indent; i++)
-                result += "    ";
-
-            result += $"END CLASS";
-
-            Console.WriteLine(result);
+            Print("");
         }
         protected override void VisitConstant(ConstantExpression expression)
         {
-            var result = string.Empty;
-
-            for (var i = 0; i < _indent; i++)
-                result += "    ";
-
-            result += $"CONSTANT: {expression.Value} ({expression.ConstentKind})";
-
-            Console.WriteLine(result);
+            Print($" CONSTANT: {expression.Value} ({expression.ConstentKind})");
         }
         protected override void VisitConstructor(ConstructorDeclaration constructorDeclaration)
         {
-            var result = string.Empty;
-
-            for (var i = 0; i < _indent; i++)
-                result += "    ";
-
-            result += $"CONSTRUCTOR: {string.Join(", ", constructorDeclaration.Parameters.Select(x => x.Type.Name))}";
-
-            Console.WriteLine(result);
+            Print($" CONSTRUCTOR: {string.Join(", ", constructorDeclaration.Parameters.Select(x => x.Type.Name))}");
 
             _indent++;
 
@@ -189,14 +147,7 @@ namespace Sx.Compiler.Samples.Parser
 
             _indent--;
 
-            result = string.Empty;
-
-            for (var i = 0; i < _indent; i++)
-                result += "    ";
-
-            result += $"END CONSTRUCTOR";
-
-            Console.WriteLine(result);
+            Print("");
         }
         protected override void VisitContinue(ContinueStatement statement)
         {
@@ -212,14 +163,7 @@ namespace Sx.Compiler.Samples.Parser
         }
         protected override void VisitField(FieldDeclaration fieldDeclaration)
         {
-            var result = string.Empty;
-
-            for (var i = 0; i < _indent; i++)
-                result += "    ";
-
-            result += $"FIELD: {fieldDeclaration.Name} {fieldDeclaration.Type.Name}";
-
-            Console.WriteLine(result);
+            Print($" FIELD: {fieldDeclaration.Name} {fieldDeclaration.Type.Name}");
 
             if (fieldDeclaration.DefaultValue != null)
             {
@@ -234,18 +178,34 @@ namespace Sx.Compiler.Samples.Parser
         }
         protected override void VisitFor(ForStatement statement)
         {
-            
+            Print($" FOR LOOP:");
+
+            _indent++;
+
+            Print($" INITIALIZER:");
+            _indent++;
+            Visit(statement.Initialization);
+            _indent--;
+
+            Print($" CONDITION:");
+            _indent++;
+            Visit(statement.Condition);
+            _indent--;
+
+            Print($" INCREMENT:");
+            _indent++;
+            Visit(statement.Increment);
+            _indent--;
+
+            _indent--;
+
+            Visit(statement.Body);
+
+            _indent--;
         }
         protected override void VisitIdentifier(IdentifierExpression expression)
         {
-            var result = string.Empty;
-
-            for (var i = 0; i < _indent; i++)
-                result += "    ";
-
-            result += $"INDENTIFIER EXPRESION: {expression.Identifier}";
-
-            Console.WriteLine(result);
+            Print($" INDENTIFIER EXPRESION: {expression.Identifier}");
         }
         protected override void VisitIf(IfStatement statement)
         {
@@ -253,25 +213,11 @@ namespace Sx.Compiler.Samples.Parser
         }
         protected override void VisitImport(ImportStatement statement)
         {
-            var result = string.Empty;
-
-            for (var i = 0; i < _indent; i++)
-                result += "    ";
-
-            result += $"IMPORT STATEMENT: {statement.Name}";
-
-            Console.WriteLine(result);
+            Print($"IMPORT STATEMENT: {statement.Name}");
         }
         protected override void VisitLambda(LambdaExpression expression)
         {
-            var result = string.Empty;
-
-            for (var i = 0; i < _indent; i++)
-                result += "    ";
-
-            result += $"LAMBDA EXPRESSION: ({string.Join(", ", expression.Parameters.Select(x => x.Type.Name))})";
-
-            Console.WriteLine(result);
+            Print($" LAMBDA EXPRESSION: ({string.Join(", ", expression.Parameters.Select(x => x.Type.Name))})");
 
             _indent++;
 
@@ -281,21 +227,13 @@ namespace Sx.Compiler.Samples.Parser
         }
         protected override void VisitLogical(BinaryExpression expression)
         {
-            var result = string.Empty;
-
-            for (var i = 0; i < _indent; i++)
-                result += "    ";
-
-            result += $"LOGICAL BINARY EXPRESION";
-
-            Console.WriteLine(result);
+            Print($" LOGICAL BINARY EXPRESION");
 
             _indent++;
 
             Visit(expression.Left);
 
-            for (var i = 0; i < _indent; i++)
-                Console.Write("    ");
+            Print($" {expression.Operator}");
 
             Visit(expression.Right);
 
@@ -303,14 +241,11 @@ namespace Sx.Compiler.Samples.Parser
         }
         protected override void VisitMethod(MethodDeclaration methodDeclaration)
         {
-            var result = string.Empty;
+            var genericTypes = methodDeclaration.TypeDeclarations.Any()
+                ? $"<{string.Join(", ", methodDeclaration.TypeDeclarations.Select(x => x.Name))}>"
+                : string.Empty;
 
-            for (var i = 0; i < _indent; i++)
-                result += "    ";
-
-            result += $"METHOD DECLARATION: ({methodDeclaration.Visibility}) {methodDeclaration.Name}({string.Join(", ", methodDeclaration.Parameters.Select(x => x.Type.Name))}) => {methodDeclaration.ReturnType.Name}";
-
-            Console.WriteLine(result);
+            Print($" METHOD DECLARATION: ({methodDeclaration.Visibility}) {methodDeclaration.Name}{genericTypes}({string.Join(", ", methodDeclaration.Parameters.Select(x => string.Join(" ", x.Type.Name, x.Name)))}) => {methodDeclaration.ReturnType.Name}");
 
             _indent++;
 
@@ -323,14 +258,11 @@ namespace Sx.Compiler.Samples.Parser
         }
         protected override void VisitMethodCall(MethodCallExpression expression)
         {
-            var result = string.Empty;
-
-            for (var i = 0; i < _indent; i++)
-                result += "    ";
-
-            result += $"METHOD CALL EXPRESION {((IdentifierExpression)expression.Reference).Identifier}";
-
-            Console.WriteLine(result);
+            var temp = (expression.Reference is ReferenceExpression)
+                ? string.Join(".", ((ReferenceExpression)(expression.Reference)).References.OfType<IdentifierExpression>().Select(x => x.Identifier))
+                : string.Empty;
+            
+            Print($" METHOD CALL EXPRESION {temp}"); /*{(expression.Reference).Identifier}*/
 
             _indent++;
 
@@ -348,30 +280,16 @@ namespace Sx.Compiler.Samples.Parser
         }
         protected override void VisitModuleDeclaration(ModuleDeclaration moduleDeclaration)
         {
-            var result = string.Empty;
-
-            for (var i = 0; i < _indent; i++)
-                result += "    ";
-
-            result += $"MODULE: {moduleDeclaration.Name}";
-
-            Console.WriteLine(result);
+            Print($"MODULE: {moduleDeclaration.Name}");
 
             _indent++;
 
-            foreach (var child in moduleDeclaration.Classes)
+            foreach (var child in moduleDeclaration.Children)
                 Visit(child);
 
             _indent--;
 
-            result = string.Empty;
-
-            for (var i = 0; i < _indent; i++)
-                result += "    ";
-
-            result += $"END MODULE";
-
-            Console.WriteLine(result);
+            Print("");
         }
         protected override void VisitNew(NewExpression expression)
         {
@@ -383,14 +301,7 @@ namespace Sx.Compiler.Samples.Parser
         }
         protected override void VisitProperty(PropertyDeclaration propertyDeclaration)
         {
-            var result = string.Empty;
-
-            for (var i = 0; i < _indent; i++)
-                result += "    ";
-
-            result += $"PROPERTY: {propertyDeclaration.Name} {propertyDeclaration.Type.Name}";
-
-            Console.WriteLine(result);
+            Print($" PROPERTY: {propertyDeclaration.Name} {propertyDeclaration.Type.Name}");
 
             _indent++;
 
@@ -404,7 +315,14 @@ namespace Sx.Compiler.Samples.Parser
         }
         protected override void VisitReference(ReferenceExpression expression)
         {
-            
+            Print($" REFERENCE EXPRESION: ");
+
+            _indent++;
+
+            foreach (var reference in expression.References)
+                Visit(reference);
+
+            _indent--;
         }
         protected override void VisitSwitch(SwitchStatement statement)
         {
@@ -412,18 +330,19 @@ namespace Sx.Compiler.Samples.Parser
         }
         protected override void VisitUnary(UnaryExpression expression)
         {
-            
+            Print($" UNARY EXPRESSION: ");
+
+            _indent++;
+
+            Visit(expression.Argument);
+
+            Print($" {expression.Operator}");
+
+            _indent--;
         }
         protected override void VisitVariable(VariableDeclaration variableDeclaration)
         {
-            var result = string.Empty;
-
-            for (var i = 0; i < _indent; i++)
-                result += "    ";
-
-            result += $"VARIABLE DECLARATION: {variableDeclaration.Name}";
-
-            Console.WriteLine(result);
+            Print($" VARIABLE DECLARATION: {variableDeclaration.Name}");
 
             _indent++;
 
@@ -440,9 +359,14 @@ namespace Sx.Compiler.Samples.Parser
             var result = string.Empty;
 
             for (var i = 0; i < _indent; i++)
-                result += "    ";
+            {
+                if (i == _indent - 1)
+                    result += "  \u2517";
+                else
+                    result += "  ";
+            }
 
-            result += $"TYPE DECLARATION: {typeDeclaration.Name}";
+            result += $" TYPE DECLARATION: {typeDeclaration.Name}";
 
             Console.WriteLine(result);
         }
@@ -451,9 +375,14 @@ namespace Sx.Compiler.Samples.Parser
             var result = string.Empty;
 
             for (var i = 0; i < _indent; i++)
-                result += "    ";
+            {
+                if (i == _indent - 1)
+                    result += "  \u2517";
+                else
+                    result += "  ";
+            }
 
-            result += $"RETURN STATEMENT:";
+            result += $" RETURN STATEMENT:";
 
             Console.WriteLine(result);
 
@@ -466,9 +395,15 @@ namespace Sx.Compiler.Samples.Parser
             _indent--;
         }
 
+        protected override void VisitCompilationUnit(CompilationUnit compilationUnit)
+        {
+            foreach (var item in compilationUnit.Contents)
+                Visit(item);
+        }
+
         public AstPrintVisitor()
         {
-
+            Console.OutputEncoding = System.Text.Encoding.Unicode;
         }
     }
 }

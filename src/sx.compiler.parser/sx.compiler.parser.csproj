@@ -2,22 +2,19 @@
 
   <PropertyGroup>
     <VersionPrefix>0.0.1</VersionPrefix>
-    <TargetFramework>net452</TargetFramework>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
     <AssemblyName>sx.compiler.parser</AssemblyName>
     <PackageId>sx.compiler.parser</PackageId>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <RootNamespace>Sx.Compiler.Parser</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\sx.compiler.abstractions\sx.compiler.abstractions.csproj" />
     <ProjectReference Include="..\sx.compiler.lexer.abstractions\sx.compiler.lexer.abstractions.csproj" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
+    <ProjectReference Include="..\sx.compiler.lexer\sx.compiler.lexer.csproj" />
   </ItemGroup>
 
 </Project>

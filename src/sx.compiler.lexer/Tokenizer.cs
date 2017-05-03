@@ -8,7 +8,7 @@ using Sx.Lexer.Abstractions;
 
 namespace Sx.Lexer
 {
-    internal class Lexer : ILexer
+    public class Tokenizer : ITokenizer
     {
         private readonly TokenizerGrammar _grammar;
         private readonly string[] _keywords;
@@ -41,7 +41,7 @@ namespace Sx.Lexer
         }
         public IEnumerable<IToken> Tokenize(string sourceFileContent)
         {
-            return Tokenize(new SourceFile(sourceFileContent));
+            return Tokenize(new SourceFile("n/a", sourceFileContent));
         }
         private IEnumerable<IToken> TokenizeInternal()
         {
@@ -567,8 +567,8 @@ namespace Sx.Lexer
             return _index == _sourceFile.Contents.Length || _ch.IsEOF();
         }
 
-        public Lexer(TokenizerGrammar grammar) : this(grammar, new ErrorSink()) { }
-        public Lexer(TokenizerGrammar grammar, IErrorSink errorSink)
+        public Tokenizer(TokenizerGrammar grammar) : this(grammar, new ErrorSink()) { }
+        public Tokenizer(TokenizerGrammar grammar, IErrorSink errorSink)
         {
             if (grammar == null)
                 throw new ArgumentNullException(nameof(grammar));

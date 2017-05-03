@@ -14,6 +14,10 @@ namespace Sx.Compiler.Parser.Syntax
         {
             switch (node?.Category)
             {
+                case SyntaxCatagory.CompilationUnit:
+                    VisitCompilationUnit(node as CompilationUnit);
+                    break;
+
                 case SyntaxCatagory.Document:
                     VisitDocument(node as SourceDocument);
                     break;
@@ -100,6 +104,7 @@ namespace Sx.Compiler.Parser.Syntax
                 case BinaryOperator.Equal:
                 case BinaryOperator.GreaterThan:
                 case BinaryOperator.GreaterThanOrEqual:
+                case BinaryOperator.LessThan:
                 case BinaryOperator.LessThanOrEqual:
                 case BinaryOperator.LogicalAnd:
                 case BinaryOperator.LogicalOr:
@@ -249,6 +254,7 @@ namespace Sx.Compiler.Parser.Syntax
         protected abstract void VisitVariable(VariableDeclaration variableDeclaration);
         protected abstract void VisitWhile(WhileStatement statement);
         protected abstract void VisitReturn(ReturnStatement statement);
+        protected abstract void VisitCompilationUnit(CompilationUnit compilationUnit);
     }
     
 }

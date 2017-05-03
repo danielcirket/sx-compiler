@@ -1,13 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net452</TargetFramework>
-    <AssemblyName>sx.compiler.samples.parser</AssemblyName>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <AssemblyName>Sx.Compiler.Samples.Parser</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>sx.compiler.samples.parser</PackageId>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <RootNamespace>Sx.Compiler.Samples.Parser</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

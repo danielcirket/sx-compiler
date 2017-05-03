@@ -20,10 +20,6 @@ namespace Sx.Lexer
         {
             return $@"Start: (Line){_sourceFilePart.Start.Line} (Col){_sourceFilePart.Start.Column}, Type: {TokenType}, Value: {Value}";
         }
-        public bool IsTrivia()
-        {
-            return (Category == TokenCategory.Whitespace || Category == TokenCategory.Comment);
-        }
         private TokenCategory GetTokenCategory()
         {
             switch (TokenType)

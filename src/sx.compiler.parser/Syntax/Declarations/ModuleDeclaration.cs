@@ -5,12 +5,12 @@ namespace Sx.Compiler.Parser.Syntax.Declarations
 {
     public class ModuleDeclaration : Declaration
     {
-        public IEnumerable<ClassDeclaration> Classes { get; }
+        public IEnumerable<Declaration> Children { get; }
         public override SyntaxKind Kind => SyntaxKind.ModuleDeclaration;
 
-        public ModuleDeclaration(ISourceFilePart span, string name, IEnumerable<ClassDeclaration> children) : base(span, name)
+        public ModuleDeclaration(ISourceFilePart span, string name, IEnumerable<Declaration> children) : base(span, name)
         {
-            Classes = children;
+            Children = children;
         }
     }
 }
