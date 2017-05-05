@@ -27,7 +27,7 @@ namespace Sx.Compiler.Lexer.Abstractions
                 new TokenMatch(TokenType.Keyword, "return"),
                 new TokenMatch(TokenType.Keyword, "while"),
                 new TokenMatch(TokenType.Keyword, "for"),
-                new TokenMatch(TokenType.Keyword, "let"),
+                new TokenMatch(TokenType.Keyword, "var"),
                 new TokenMatch(TokenType.Keyword, "true"),
                 new TokenMatch(TokenType.Keyword, "false"),
                 new TokenMatch(TokenType.Keyword, "int"),
