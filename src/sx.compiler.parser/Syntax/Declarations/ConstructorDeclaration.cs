@@ -11,7 +11,7 @@ namespace Sx.Compiler.Parser.Syntax.Declarations
         public DeclarationVisibility Visibility { get; }
         public IEnumerable<ParameterDeclaration> Parameters { get; }
 
-        public ConstructorDeclaration(ISourceFilePart span, DeclarationVisibility visibility, IEnumerable<ParameterDeclaration> parameters, BlockStatement body) : base(span, string.Empty)
+        public ConstructorDeclaration(ISourceFilePart span, DeclarationVisibility visibility, IEnumerable<ParameterDeclaration> parameters, BlockStatement body) : base(span, "constructor")
         {
             Visibility = visibility;
             Body = body;

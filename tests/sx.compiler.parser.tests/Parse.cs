@@ -916,6 +916,67 @@ namespace Sx.Compiler.Parser.Tests
                 public class Constructor
                 {
                     // constructor declaration = <visibility>, "constructor", <argument list>, <scope>
+                    [Fact]
+                    public void WhenSuppliedWithNoConstructorStatementsThenShouldNotThrow()
+                    {
+                        Action act = () =>
+                        {
+                            var parser = CreateDefaultParser();
+                            var file = CreateSourceFile(nameof(WhenSuppliedWithNoConstructorStatementsThenShouldNotThrow), "module Sx { public class TestClass {}}");
+
+                            var result = parser.Parse(file);
+                        };
+
+                        act.ShouldNotThrow<SyntaxException>();
+                    }
+                    [Fact]
+                    public void WhenDeclaredWithMissingVisibilityThenShouldGiveMissingVisibilityModifierSyntaxError()
+                    {
+                        var parser = CreateDefaultParser();
+                        var methodName = $"constructor";
+                        var file = CreateSourceFile(nameof(WhenDeclaredWithMissingVisibilityThenShouldGiveMissingVisibilityModifierSyntaxError), $"module Sx {{ public class TestClass {{ {methodName} {{}} }}}}");
+
+                        var result = parser.Parse(file);
+
+                        parser.ErrorSink.HasErrors.Should().Be(true);
+                        parser.ErrorSink.First().Severity.Should().Be(Severity.Error);
+
+                        parser.ErrorSink.First().Message.Should().StartWith($"Unexpected '{methodName}'. Expected Visibility modifier, 'public', 'protected', 'private'");
+                    }
+                    [Fact]
+                    public void WhenMissingMethodBodyThenShouldGiveSyntaxError()
+                    {
+                        var parser = CreateDefaultParser();
+                        var methodName = $"constructor";
+                        var file = CreateSourceFile(nameof(WhenMissingMethodBodyThenShouldGiveSyntaxError), $"module Sx {{ public class TestClass {{ public {methodName}() }}}}");
+
+                        var result = parser.Parse(file);
+
+                        parser.ErrorSink.HasErrors.Should().Be(true);
+                        parser.ErrorSink.First().Severity.Should().Be(Severity.Error);
+
+                        parser.ErrorSink.First().Message.Should().StartWith($"Unexpected '}}'. Expected '{{");
+                    }
+                    [Fact]
+                    public void WhenEmptyBodyThenShouldParse()
+                    {
+                        var parser = CreateDefaultParser();
+                        var methodName = $"constructor";
+                        var file = CreateSourceFile(nameof(WhenEmptyBodyThenShouldParse), $"module Sx {{ public class TestClass {{ public {methodName}() {{}} }}}}");
+
+                        var result = parser.Parse(file);
+
+                        parser.ErrorSink.HasErrors.Should().Be(false);
+
+                        var sourceDocument = (SourceDocument)result;
+                        var moduleDeclaration = ((ModuleDeclaration)sourceDocument.Children.First());
+                        var classDeclaration = ((ClassDeclaration)moduleDeclaration.Children.First());
+                        var constructorDeclaration = classDeclaration.Constructors.First();
+
+                        constructorDeclaration.Name.Should().Be(methodName);
+                        constructorDeclaration.Parameters.Should().HaveCount(0);
+                        constructorDeclaration.Body.Contents.Should().HaveCount(0);
+                    }
                 }
 
 
@@ -952,6 +1013,41 @@ namespace Sx.Compiler.Parser.Tests
                         return GetEnumerator();
                     }
                 }
+            }
+
+            public class While
+            {
+                
+            }
+
+            public class DoWhile
+            {
+
+            }
+
+            public class For
+            {
+
+            }
+
+            public class If
+            {
+
+            }
+
+            public class IfElse
+            {
+
+            }
+
+            public class Switch
+            {
+
+            }
+
+            public class LambdaExpression
+            {
+
             }
         }
     }
