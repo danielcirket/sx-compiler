@@ -68,7 +68,7 @@ namespace Sx.Lexer
             {
                 return Int();
             }
-            else if ((_ch == '/' && (Peak(1) == '/' || Peak(1) == '*')) || _ch == '#')
+            else if ((_ch == '/' && (Peek(1) == '/' || Peek(1) == '*')) || _ch == '#')
             {
                 return Comment();
             }
@@ -105,7 +105,7 @@ namespace Sx.Lexer
 
             return new Token(tokenType, content, startSourceLocation, endSourceLocation);
         }
-        private char Peak(int ahead)
+        private char Peek(int ahead)
         {
             if (_index + ahead > _sourceFile.Contents.Length - 1)
                 return '\0';
@@ -182,7 +182,7 @@ namespace Sx.Lexer
                 Consume();
             }
 
-            if (!IsEOF() && Peak(-1) == '.')
+            if (!IsEOF() && Peek(-1) == '.')
             {
                 // .e10 is invalid.
                 return Error(message: "Must contain digits after '.'");
@@ -445,22 +445,38 @@ namespace Sx.Lexer
         }
         private IToken BlockComment()
         {
+            var level = 1;
+
+            Func<bool> IsStartOfComment = () => _ch == '/' && _next == '*';
             Func<bool> IsEndOfComment = () => _ch == '*' && _next == '/';
-            while (!IsEndOfComment())
+
+            while(level > 0)
             {
                 if (IsEOF())
                 {
+                    AddError("Unterminated block comment", Severity.Error);
                     return CreateToken(TokenType.Error);
                 }
-                //if (_ch.IsNewLine())
-                //{
-                //    NewLine();
-                //}
-                Consume();
-            }
 
-            Consume();
-            Consume();
+                if (IsStartOfComment())
+                {
+                    level++;
+
+                    Consume();
+                    Consume();
+                }
+                else if (IsEndOfComment())
+                {
+                    level--;
+
+                    Consume();
+                    Consume();
+                }
+                else
+                {
+                    Consume();
+                }
+            }
 
             return CreateToken(TokenType.BlockComment);
         }

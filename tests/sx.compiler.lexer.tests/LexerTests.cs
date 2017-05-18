@@ -278,6 +278,37 @@ namespace Sx.Compiler.Lexer.Tests
                 result[1].TokenType.Should().Be(TokenType.EOF);
             }
 
+            [Fact]
+            public void WhenSourceFileContainsNestedBlockCommentsThenShouldReturnBlockComment()
+            {
+                var input = "/* Block Comment /* With Nested Block /* With Another Nested Block */ */ */";
+
+                var lexer = new Sx.Lexer.Tokenizer(TokenizerGrammar.Default);
+
+                var result = lexer.Tokenize(input).ToList();
+
+                lexer.ErrorSink.HasErrors.Should().Be(false);
+                lexer.ErrorSink.Errors.Count().Should().Be(0);
+                result[0].TokenType.Should().Be(TokenType.BlockComment);
+                result[1].TokenType.Should().Be(TokenType.EOF);
+            }
+
+            [Fact]
+            public void WhenSourceFileContainsMismatchedNestedBlockCommentsThenShouldReturnHaveMatchingError()
+            {
+                var input = "/* Block Comment /* With Nested Block /* With Another Nested Block */ */";
+
+                var lexer = new Sx.Lexer.Tokenizer(TokenizerGrammar.Default);
+
+                var result = lexer.Tokenize(input).ToList();
+
+                lexer.ErrorSink.HasErrors.Should().Be(true);
+                lexer.ErrorSink.Errors.Count().Should().Be(1);
+                lexer.ErrorSink.Errors.First().Message.Should().Be("Unterminated block comment");
+                result[0].TokenType.Should().Be(TokenType.Error);
+                result[1].TokenType.Should().Be(TokenType.EOF);
+            }
+
             private TokenType GetPunctuationTokenType(char character)
             {
                 switch (character)
