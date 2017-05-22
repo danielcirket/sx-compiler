@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using Sx.Compiler.Parser;
 using Sx.Compiler.Parser.Syntax;
 using Sx.Compiler.Parser.Syntax.Declarations;
 using Sx.Compiler.Parser.Syntax.Expressions;
@@ -261,7 +262,7 @@ namespace Sx.Compiler.Samples.Parser
 
         protected override void VisitCompilationUnit(CompilationUnit compilationUnit)
         {
-            foreach (var item in compilationUnit.Contents)
+            foreach (var item in compilationUnit.Asts)
                 Visit(item);
         }
     }

@@ -1,6 +1,6 @@
 ﻿namespace Sx.Compiler.Parser.Syntax
 {
-    public enum SyntaxCatagory
+    public enum SyntaxCategory
     {
         Expression,
         Statement,

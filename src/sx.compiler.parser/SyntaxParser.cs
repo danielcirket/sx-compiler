@@ -28,7 +28,7 @@ namespace Sx.Compiler.Parser
         private IToken _last => Peek(-1);
         private IToken _next => Peek(1);
 
-        public SyntaxNode Parse(ISourceFile sourceFile)
+        public CompilationUnit Parse(ISourceFile sourceFile)
         {
             if (sourceFile == null)
                 throw new ArgumentNullException(nameof(sourceFile));
@@ -37,9 +37,12 @@ namespace Sx.Compiler.Parser
             _tokens = _tokenizer.Tokenize(sourceFile).Where(t => !t.IsTrivia()).ToList();
             _index = 0;
 
+            if (_errorSink.HasErrors)
+                return null;
+
             try
             {
-                return ParseInternal();
+                return new CompilationUnit(new[] { ParseInternal() });
             }
             catch (SyntaxException ex)
             {
@@ -60,6 +63,9 @@ namespace Sx.Compiler.Parser
                 _tokens = _tokenizer.Tokenize(file).Where(t => !t.IsTrivia()).ToList();
                 _index = 0;
 
+                if (_errorSink.HasErrors)
+                    return null;
+
                 try
                 {
                     children.Add(ParseInternal());
@@ -70,7 +76,7 @@ namespace Sx.Compiler.Parser
                 }
             }
 
-            return new CompilationUnit(null, children);
+            return new CompilationUnit(children);
         }
 
         private SyntaxNode ParseInternal()
@@ -152,7 +158,7 @@ namespace Sx.Compiler.Parser
                     action();
 
                     if (!IsMakingProgress(startIndex))
-                        throw SyntaxError(Severity.Error, $"Unexpected token '{_current.Value}'", CreateSpan(_current.SourceFilePart.Start));
+                        throw SyntaxError(Severity.Error, $"Unexpected '{_current.Value}'", CreateSpan(_current.SourceFilePart.Start));
 
                     startIndex = _index;
                 }
@@ -1595,11 +1601,13 @@ namespace Sx.Compiler.Parser
 
         #endregion
 
-        public SyntaxParser() : this(options => { }, new Tokenizer(TokenizerGrammar.Default), new ErrorSink())
+        public SyntaxParser() : this(new Tokenizer(TokenizerGrammar.Default))
         {
 
         }
-        public SyntaxParser(ITokenizer tokenizer) : this(options => { }, tokenizer, tokenizer.ErrorSink) { }
+        public SyntaxParser(ITokenizer tokenizer) : this(options => { }, tokenizer, tokenizer.ErrorSink)
+        {
+        }
         public SyntaxParser(Action<ParserOptions> options, ITokenizer tokenizer, IErrorSink errorSink)
         {
             if (options == null)

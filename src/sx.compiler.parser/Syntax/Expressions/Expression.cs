@@ -4,7 +4,7 @@ namespace Sx.Compiler.Parser.Syntax.Expressions
 {
     public abstract class Expression : SyntaxNode
     {
-        public override SyntaxCatagory Category => SyntaxCatagory.Expression;
+        public override SyntaxCategory Category => SyntaxCategory.Expression;
 
         protected Expression(ISourceFilePart span) : base(span)
         {

@@ -5,7 +5,7 @@ namespace Sx.Compiler.Parser.Syntax
 {
     public class SourceDocument : SyntaxNode
     {
-        public override SyntaxCatagory Category => SyntaxCatagory.Document;
+        public override SyntaxCategory Category => SyntaxCategory.Document;
         public IEnumerable<SyntaxNode> Children { get; }
         public override SyntaxKind Kind => SyntaxKind.SourceDocument;
         public ISourceFile SourceCode { get; }

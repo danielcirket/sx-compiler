@@ -14,23 +14,19 @@ namespace Sx.Compiler.Parser.Syntax
         {
             switch (node?.Category)
             {
-                case SyntaxCatagory.CompilationUnit:
-                    VisitCompilationUnit(node as CompilationUnit);
-                    break;
-
-                case SyntaxCatagory.Document:
+                case SyntaxCategory.Document:
                     VisitDocument(node as SourceDocument);
                     break;
 
-                case SyntaxCatagory.Expression:
+                case SyntaxCategory.Expression:
                     VisitExpression(node as Expression);
                     break;
 
-                case SyntaxCatagory.Statement:
+                case SyntaxCategory.Statement:
                     VisitStatement(node as Statement);
                     break;
 
-                case SyntaxCatagory.Declaration:
+                case SyntaxCategory.Declaration:
                     VisitDeclaration(node as Declaration);
                     break;
             }

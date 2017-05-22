@@ -1,0 +1,36 @@
+﻿module Sx.Test
+{
+	public class Program
+	{
+		//int _intField = 1;
+		//private T _genericField = MethodCall();
+
+
+		//public int TestIntProp { get { return 1; } }
+		//public string TestStringProp { get { return "string constant"; } private set { _value = value; } }
+		//protected SomeType TestGetSet { get; set; }
+		//protected string TestExpressionPropNoLambda => _intField + _intField2;
+		//private string TestExpressionPropNoLambda2 => _intField2;
+		//public T TestExpressionProp3 => _genericField;
+		//public string TestExpressionProp3 => "Test Return For Property";
+		//public int TestExpressionBodiedMemberProperty
+		//{
+		//	get => _intField;
+		//	set => _intField = value;
+		//}
+		//
+		//public string MethodWithExpressionBody(int parameter) => AnotherMethod(parameter);
+		//public string MethodWithGenericTypeArguments<T4>(T4 arg)
+		//{
+		//	
+		//}
+		
+		public constructor(int value)
+		{
+			value = 1;
+			unknownValue = -1;
+		}
+
+		public constructor(int value) {}
+	}
+}

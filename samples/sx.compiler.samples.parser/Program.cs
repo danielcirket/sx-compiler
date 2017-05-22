@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Sx.Compiler.Abstractions;
+using Sx.Compiler.Parser.Semantics;
 using Sx.Compiler.Parser.Syntax;
 using Sx.Lexer;
 
@@ -20,7 +21,7 @@ namespace Sx.Compiler.Samples.Parser
 
             stopwatch.Start();
 
-            var ast = parser.Parse(files);
+            var compilationUnit = parser.Parse(files);
 
             stopwatch.Stop();
 
@@ -32,8 +33,8 @@ namespace Sx.Compiler.Samples.Parser
 
             var astPrinter = new AstPrintVisitor();
 
-            if (ast != null)
-                foreach (var node in ast.Contents)
+            if (compilationUnit != null)
+                foreach (var node in compilationUnit.Asts)
                     astPrinter.Visit(node);
 
             if (parser.ErrorSink.HasErrors)
@@ -59,6 +60,8 @@ namespace Sx.Compiler.Samples.Parser
 
                 Console.WriteLine();
             }
+
+            var analysis = new SemanticAnalyzer(parser.ErrorSink, compilationUnit);
 
             Console.ReadLine();
         }

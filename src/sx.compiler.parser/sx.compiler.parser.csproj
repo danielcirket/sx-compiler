@@ -17,4 +17,8 @@
     <ProjectReference Include="..\sx.compiler.lexer\sx.compiler.lexer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="BoundTree\" />
+  </ItemGroup>
+
 </Project>

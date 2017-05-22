@@ -9,4 +9,9 @@
     <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\sx.compiler.lexer\sx.compiler.lexer.csproj" />
+    <ProjectReference Include="..\sx.compiler.parser\sx.compiler.parser.csproj" />
+  </ItemGroup>
+
 </Project>

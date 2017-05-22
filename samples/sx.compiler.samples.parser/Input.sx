@@ -33,6 +33,7 @@ module Sx.Test
 
 		public constructor(int value)
 		{
+			value = 2;
 		}
 	}
 }

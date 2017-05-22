@@ -4,7 +4,7 @@ namespace Sx.Compiler.Parser.Syntax.Statements
 {
     public abstract class Statement : SyntaxNode
     {
-        public override SyntaxCatagory Category => SyntaxCatagory.Statement;
+        public override SyntaxCategory Category => SyntaxCategory.Statement;
 
         protected Statement(ISourceFilePart span) : base(span)
         {

@@ -71,7 +71,7 @@ namespace Sx.Compiler.Parser.Tests
 
                     var result = parser.Parse(file);
 
-                    ((SourceDocument)result).Children.Any(node => node.GetType() == typeof(ImportStatement)).Should().Be(false);
+                    ((SourceDocument)(result.Asts.First())).Children.Any(node => node.GetType() == typeof(ImportStatement)).Should().Be(false);
                 }
                 [Fact]
                 public void WhenSuppliedWithImportStatementThenShouldReturnImportNode()
@@ -81,7 +81,7 @@ namespace Sx.Compiler.Parser.Tests
 
                     var result = parser.Parse(file);
 
-                    ((SourceDocument)result).Children.Count(node => node.GetType() != typeof(ImportStatement)).Should().Be(1);
+                    ((SourceDocument)(result.Asts.First())).Children.Count(node => node.GetType() != typeof(ImportStatement)).Should().Be(1);
                 }
                 [Theory]
                 [ClassData(typeof(MalformedImportNameTestCharacters))]
@@ -108,7 +108,7 @@ namespace Sx.Compiler.Parser.Tests
 
                     var result = parser.Parse(file);
 
-                    ((SourceDocument)result).Children.Count(node => node.GetType() != typeof(ImportStatement)).Should().Be(2);
+                    ((SourceDocument)(result.Asts.First())).Children.Count(node => node.GetType() != typeof(ImportStatement)).Should().Be(2);
                 }
                 [Fact]
                 public void WhenImportStatementNotAtStartOfFileThenShouldHaveUnexpectedTokenError()
@@ -183,11 +183,11 @@ namespace Sx.Compiler.Parser.Tests
                     var result = parser.Parse(file);
 
                     result.Should().NotBeNull();
-                    result.Should().BeOfType<SourceDocument>();
+                    result.Should().BeOfType<CompilationUnit>();
 
-                    ((SourceDocument)result).Children.Should().HaveCount(1);
-                    ((SourceDocument)result).Children.First().Should().BeOfType<ModuleDeclaration>();
-                    ((ModuleDeclaration)(((SourceDocument)result).Children.First())).Name.Should().Be(moduleName);
+                    ((SourceDocument)(result.Asts.First())).Children.Should().HaveCount(1);
+                    ((SourceDocument)(result.Asts.First())).Children.First().Should().BeOfType<ModuleDeclaration>();
+                    ((ModuleDeclaration)(((SourceDocument)(result.Asts.First())).Children.First())).Name.Should().Be(moduleName);
                 }
                 [Fact]
                 public void WhenSuppliedWithNestedNameThenParsedModuleNameShouldMatch()
@@ -199,11 +199,11 @@ namespace Sx.Compiler.Parser.Tests
                     var result = parser.Parse(file);
 
                     result.Should().NotBeNull();
-                    result.Should().BeOfType<SourceDocument>();
+                    result.Should().BeOfType<CompilationUnit>();
 
-                    ((SourceDocument)result).Children.Should().HaveCount(1);
-                    ((SourceDocument)result).Children.First().Should().BeOfType<ModuleDeclaration>();
-                    ((ModuleDeclaration)(((SourceDocument)result).Children.First())).Name.Should().Be(moduleName);
+                    ((SourceDocument)(result.Asts.First())).Children.Should().HaveCount(1);
+                    ((SourceDocument)(result.Asts.First())).Children.First().Should().BeOfType<ModuleDeclaration>();
+                    ((ModuleDeclaration)(((SourceDocument)(result.Asts.First())).Children.First())).Name.Should().Be(moduleName);
                 }
                 [Theory]
                 [ClassData(typeof(MalformedModuleNameTestCharacters))]
@@ -231,11 +231,11 @@ namespace Sx.Compiler.Parser.Tests
                     var result = parser.Parse(file);
 
                     result.Should().NotBeNull();
-                    result.Should().BeOfType<SourceDocument>();
+                    result.Should().BeOfType<CompilationUnit>();
 
-                    ((SourceDocument)result).Children.Should().HaveCount(1);
-                    ((SourceDocument)result).Children.First().Should().BeOfType<ModuleDeclaration>();
-                    ((ModuleDeclaration)(((SourceDocument)result).Children.First())).Children.Should().HaveCount(0);
+                    ((SourceDocument)(result.Asts.First())).Children.Should().HaveCount(1);
+                    ((SourceDocument)(result.Asts.First())).Children.First().Should().BeOfType<ModuleDeclaration>();
+                    ((ModuleDeclaration)(((SourceDocument)(result.Asts.First())).Children.First())).Children.Should().HaveCount(0);
                 }
                 [Fact]
                 public void WhenSuppliedWithModuleStatementContainingClassThenShouldReturnSourceDocumentNodeContainingModuleWithSingleChildClass()
@@ -246,12 +246,12 @@ namespace Sx.Compiler.Parser.Tests
                     var result = parser.Parse(file);
 
                     result.Should().NotBeNull();
-                    result.Should().BeOfType<SourceDocument>();
+                    result.Should().BeOfType<CompilationUnit>();
 
-                    ((SourceDocument)result).Children.Should().HaveCount(1);
-                    ((SourceDocument)result).Children.First().Should().BeOfType<ModuleDeclaration>();
-                    ((ModuleDeclaration)(((SourceDocument)result).Children.First())).Children.Should().HaveCount(1);
-                    ((ModuleDeclaration)(((SourceDocument)result).Children.First())).Children.First().Should().BeOfType<ClassDeclaration>();
+                    ((SourceDocument)(result.Asts.First())).Children.Should().HaveCount(1);
+                    ((SourceDocument)(result.Asts.First())).Children.First().Should().BeOfType<ModuleDeclaration>();
+                    ((ModuleDeclaration)(((SourceDocument)(result.Asts.First())).Children.First())).Children.Should().HaveCount(1);
+                    ((ModuleDeclaration)(((SourceDocument)(result.Asts.First())).Children.First())).Children.First().Should().BeOfType<ClassDeclaration>();
                 }
                 [Fact]
                 public void WhenSuppliedWithModuleStatementContainingMethodThenShouldReturnSourceDocumentNodeContainingModuleWithSingleChildMethod()
@@ -262,12 +262,12 @@ namespace Sx.Compiler.Parser.Tests
                     var result = parser.Parse(file);
 
                     result.Should().NotBeNull();
-                    result.Should().BeOfType<SourceDocument>();
+                    result.Should().BeOfType<CompilationUnit>();
 
-                    ((SourceDocument)result).Children.Should().HaveCount(1);
-                    ((SourceDocument)result).Children.First().Should().BeOfType<ModuleDeclaration>();
-                    ((ModuleDeclaration)(((SourceDocument)result).Children.First())).Children.Should().HaveCount(1);
-                    ((ModuleDeclaration)(((SourceDocument)result).Children.First())).Children.First().Should().BeOfType<MethodDeclaration>();
+                    ((SourceDocument)(result.Asts.First())).Children.Should().HaveCount(1);
+                    ((SourceDocument)(result.Asts.First())).Children.First().Should().BeOfType<ModuleDeclaration>();
+                    ((ModuleDeclaration)(((SourceDocument)(result.Asts.First())).Children.First())).Children.Should().HaveCount(1);
+                    ((ModuleDeclaration)(((SourceDocument)(result.Asts.First())).Children.First())).Children.First().Should().BeOfType<MethodDeclaration>();
                 }
 
                 private class MalformedModuleNameTestCharacters : IEnumerable<object[]>
@@ -342,7 +342,7 @@ namespace Sx.Compiler.Parser.Tests
 
                     var result = parser.Parse(file);
 
-                    var moduleDeclaration  = ((SourceDocument)result).Children.First(node => node.GetType() == typeof(ModuleDeclaration));
+                    var moduleDeclaration  = ((SourceDocument)(result.Asts.First())).Children.First(node => node.GetType() == typeof(ModuleDeclaration));
                     ((ModuleDeclaration)moduleDeclaration).Children.Where(node => node.GetType() == typeof(ClassDeclaration)).Should().HaveCount(1);
                 }
 
@@ -414,7 +414,7 @@ namespace Sx.Compiler.Parser.Tests
 
                         parser.ErrorSink.HasErrors.Should().Be(false);
 
-                        var sourceDocument = (SourceDocument)result;
+                        var sourceDocument = (SourceDocument)(result.Asts.First());
                         var moduleDeclaration = ((ModuleDeclaration)sourceDocument.Children.First());
                         var classDeclaration = ((ClassDeclaration)moduleDeclaration.Children.First());
                         var fieldDeclaration = classDeclaration.Fields.First();
@@ -454,7 +454,7 @@ namespace Sx.Compiler.Parser.Tests
 
                         parser.ErrorSink.HasErrors.Should().Be(false);
 
-                        var sourceDocument = (SourceDocument)result;
+                        var sourceDocument = (SourceDocument)(result.Asts.First());
                         var moduleDeclaration = ((ModuleDeclaration)sourceDocument.Children.First());
                         var classDeclaration = ((ClassDeclaration)moduleDeclaration.Children.First());
                         var fieldDeclaration = classDeclaration.Fields.First();
@@ -474,7 +474,7 @@ namespace Sx.Compiler.Parser.Tests
 
                         parser.ErrorSink.HasErrors.Should().Be(false);
 
-                        var sourceDocument = (SourceDocument)result;
+                        var sourceDocument = (SourceDocument)(result.Asts.First());
                         var moduleDeclaration = ((ModuleDeclaration)sourceDocument.Children.First());
                         var classDeclaration = ((ClassDeclaration)moduleDeclaration.Children.First());
                         var fieldDeclaration = classDeclaration.Fields.First();
@@ -495,7 +495,7 @@ namespace Sx.Compiler.Parser.Tests
 
                         parser.ErrorSink.HasErrors.Should().Be(false);
 
-                        var sourceDocument = (SourceDocument)result;
+                        var sourceDocument = (SourceDocument)(result.Asts.First());
                         var moduleDeclaration = ((ModuleDeclaration)sourceDocument.Children.First());
                         var classDeclaration = ((ClassDeclaration)moduleDeclaration.Children.First());
                         var fieldDeclaration = classDeclaration.Fields.First();
@@ -513,7 +513,7 @@ namespace Sx.Compiler.Parser.Tests
 
                         parser.ErrorSink.HasErrors.Should().Be(false);
 
-                        var sourceDocument = (SourceDocument)result;
+                        var sourceDocument = (SourceDocument)(result.Asts.First());
                         var moduleDeclaration = ((ModuleDeclaration)sourceDocument.Children.First());
                         var classDeclaration = ((ClassDeclaration)moduleDeclaration.Children.First());
                         var fieldDeclaration = classDeclaration.Fields.First();
@@ -647,7 +647,7 @@ namespace Sx.Compiler.Parser.Tests
 
                         parser.ErrorSink.HasErrors.Should().Be(false);
 
-                        var sourceDocument = (SourceDocument)result;
+                        var sourceDocument = (SourceDocument)(result.Asts.First());
                         var moduleDeclaration = ((ModuleDeclaration)sourceDocument.Children.First());
                         var classDeclaration = ((ClassDeclaration)moduleDeclaration.Children.First());
                         var propertyDeclaration = classDeclaration.Properties.First();
@@ -666,7 +666,7 @@ namespace Sx.Compiler.Parser.Tests
 
                         parser.ErrorSink.HasErrors.Should().Be(false);
 
-                        var sourceDocument = (SourceDocument)result;
+                        var sourceDocument = (SourceDocument)(result.Asts.First());
                         var moduleDeclaration = ((ModuleDeclaration)sourceDocument.Children.First());
                         var classDeclaration = ((ClassDeclaration)moduleDeclaration.Children.First());
                         var propertyDeclaration = classDeclaration.Properties.First();
@@ -685,7 +685,7 @@ namespace Sx.Compiler.Parser.Tests
 
                         parser.ErrorSink.HasErrors.Should().Be(false);
 
-                        var sourceDocument = (SourceDocument)result;
+                        var sourceDocument = (SourceDocument)(result.Asts.First());
                         var moduleDeclaration = ((ModuleDeclaration)sourceDocument.Children.First());
                         var classDeclaration = ((ClassDeclaration)moduleDeclaration.Children.First());
                         var propertyDeclaration = classDeclaration.Properties.First();
@@ -716,7 +716,7 @@ namespace Sx.Compiler.Parser.Tests
 
                         parser.ErrorSink.HasErrors.Should().Be(false);
 
-                        var sourceDocument = (SourceDocument)result;
+                        var sourceDocument = (SourceDocument)(result.Asts.First());
                         var moduleDeclaration = ((ModuleDeclaration)sourceDocument.Children.First());
                         var classDeclaration = ((ClassDeclaration)moduleDeclaration.Children.First());
                         var propertyDeclaration = classDeclaration.Properties.First();
@@ -845,7 +845,7 @@ namespace Sx.Compiler.Parser.Tests
 
                         parser.ErrorSink.HasErrors.Should().Be(false);
 
-                        var sourceDocument = (SourceDocument)result;
+                        var sourceDocument = (SourceDocument)(result.Asts.First());
                         var moduleDeclaration = ((ModuleDeclaration)sourceDocument.Children.First());
                         var classDeclaration = ((ClassDeclaration)moduleDeclaration.Children.First());
                         var methodDeclaration = classDeclaration.Methods.First();
@@ -866,7 +866,7 @@ namespace Sx.Compiler.Parser.Tests
 
                         parser.ErrorSink.HasErrors.Should().Be(false);
 
-                        var sourceDocument = (SourceDocument)result;
+                        var sourceDocument = (SourceDocument)(result.Asts.First());
                         var moduleDeclaration = ((ModuleDeclaration)sourceDocument.Children.First());
                         var classDeclaration = ((ClassDeclaration)moduleDeclaration.Children.First());
                         var methodDeclaration = classDeclaration.Methods.First();
@@ -968,7 +968,7 @@ namespace Sx.Compiler.Parser.Tests
 
                         parser.ErrorSink.HasErrors.Should().Be(false);
 
-                        var sourceDocument = (SourceDocument)result;
+                        var sourceDocument = (SourceDocument)(result.Asts.First());
                         var moduleDeclaration = ((ModuleDeclaration)sourceDocument.Children.First());
                         var classDeclaration = ((ClassDeclaration)moduleDeclaration.Children.First());
                         var constructorDeclaration = classDeclaration.Constructors.First();
@@ -1045,7 +1045,7 @@ namespace Sx.Compiler.Parser.Tests
 
             }
 
-            public class LambdaExpression
+            public class LambdaExpressions
             {
 
             }
