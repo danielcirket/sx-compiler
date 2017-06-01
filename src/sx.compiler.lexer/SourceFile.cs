@@ -21,7 +21,7 @@ namespace Sx.Lexer
 
             _name = name;
             _source = source;
-            _lines = _source.Split(new [] { "\n", "\r\n" }, options: StringSplitOptions.RemoveEmptyEntries);
+            _lines = _source.Split(new [] { "\n", "\r\n" }, options: StringSplitOptions.None);
         }
     }
 }

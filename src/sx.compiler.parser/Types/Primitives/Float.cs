@@ -4,7 +4,9 @@ using System.Text;
 
 namespace Sx.Compiler.Parser.Types.Primitives
 {
-    class Float
+    public class Float : Type
     {
+        public override string Name => "float";
+        public override string FullName => Name;
     }
 }

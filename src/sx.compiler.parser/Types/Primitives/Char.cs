@@ -4,7 +4,9 @@ using System.Text;
 
 namespace Sx.Compiler.Parser.Types.Primitives
 {
-    class Char
+    public class Char : Type
     {
+        public override string Name => "char";
+        public override string FullName => Name;
     }
 }

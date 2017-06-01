@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Sx.Compiler.Abstractions;
+using Sx.Compiler.Parser.Semantics;
 using Sx.Compiler.Parser.Syntax.Expressions;
 
 namespace Sx.Compiler.Parser.Syntax.Statements
@@ -14,6 +15,15 @@ namespace Sx.Compiler.Parser.Syntax.Statements
         {
             Body = body;
             Cases = cases;
+        }
+        public CaseStatement(ISourceFilePart span, IEnumerable<Expression> cases, IEnumerable<SyntaxNode> body, Scope scope) : base(span, scope)
+        {
+            Body = body;
+            Cases = cases;
+        }
+        public CaseStatement(CaseStatement statement, IEnumerable<Expression> cases, IEnumerable<SyntaxNode> body, Scope scope)
+            : this(statement.FilePart, cases, body, scope)
+        {
         }
     }
 }

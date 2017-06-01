@@ -4,7 +4,9 @@ using System.Text;
 
 namespace Sx.Compiler.Parser.Types.Primitives
 {
-    class SByte
+    public class SByte : Type
     {
+        public override string Name => "SByte";
+        public override string FullName => Name;
     }
 }

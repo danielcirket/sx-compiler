@@ -1,11 +1,11 @@
-﻿using System.Linq;
-using Sx.Compiler.Parser.Syntax.Declarations;
+﻿using Sx.Compiler.Parser.Syntax.Expressions;
 
 namespace Sx.Compiler.Parser.BoundTree.Expressions
 {
     public class BoundLambdaExpression : BoundExpression
     {
-        public BoundLambdaExpression()
+        public BoundLambdaExpression(LambdaExpression expression)
+            : base(expression)
         {
         }
 

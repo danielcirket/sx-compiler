@@ -1,15 +1,17 @@
 ﻿using Sx.Compiler.Abstractions;
 using Sx.Compiler.Parser.Semantics.Passes.Declarations;
-using Sx.Compiler.Parser.Syntax;
 
 namespace Sx.Compiler.Parser.Semantics
 {
     public class SemanticAnalyzer
     {
         private readonly IErrorSink _errorSink;
-        private readonly ISemanticPass[] _passes = new[]
+        private readonly ISemanticPass[] _passes = new ISemanticPass[]
         {
+            new ForwardDeclarationPass(),
             new DeclarationPass(),
+            //new TypeResolutionPass(),
+            //new TypeInferencePass(),
             //new TypeCheckPass(),
         };
 
@@ -21,12 +23,12 @@ namespace Sx.Compiler.Parser.Semantics
 
             foreach (var pass in _passes)
             {
-                pass.Run(errorSink, compilationUnit);
+                pass.Run(errorSink, ref compilationUnit);
 
                 // TODO(Dan): E.g. too many errors etc etc
                 if (!pass.ShouldContinue)
                 {
-                    
+                    // TODO(Dan): Format and output errors!
                 }
             }
         }

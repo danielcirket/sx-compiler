@@ -1,12 +1,13 @@
-﻿using Sx.Compiler.Abstractions;
-using Sx.Compiler.Parser.Syntax.Expressions;
+﻿using Sx.Compiler.Parser.Syntax.Declarations;
 
 namespace Sx.Compiler.Parser.BoundTree.Declarations
 {
     public class BoundVariableDeclaration : BoundDeclaration
     {
-        public BoundVariableDeclaration()
+        public BoundVariableDeclaration(VariableDeclaration variableDeclaration)
+            : base(variableDeclaration.Name, variableDeclaration)
         {
+
         }
     }
 }

@@ -6,7 +6,6 @@ namespace Sx.Lexer
 {
     public class Token : IToken
     {
-        private TokenCategory _category;
         private TokenType _type;
         private ISourceFilePart _sourceFilePart;
         private string _value;
@@ -98,10 +97,10 @@ namespace Sx.Lexer
             }
         }
 
-        public Token(TokenType tokenType, string content, ISourceFileLocation startSourceLocation, ISourceFileLocation endSourceLocation)
+        public Token(TokenType tokenType, string fileName, string content, ISourceFileLocation startSourceLocation, ISourceFileLocation endSourceLocation)
         {
             _type = tokenType;
-            _sourceFilePart = new SourceFilePart(startSourceLocation, endSourceLocation, content.Split('\n'));
+            _sourceFilePart = new SourceFilePart(fileName, startSourceLocation, endSourceLocation, content.Split('\n'));
             _value = content;
         }
     }

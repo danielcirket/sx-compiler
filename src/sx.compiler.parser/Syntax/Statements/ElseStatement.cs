@@ -1,4 +1,5 @@
 ﻿using Sx.Compiler.Abstractions;
+using Sx.Compiler.Parser.Semantics;
 
 namespace Sx.Compiler.Parser.Syntax.Statements
 {
@@ -10,6 +11,14 @@ namespace Sx.Compiler.Parser.Syntax.Statements
         public ElseStatement(ISourceFilePart span, BlockStatement body) : base(span)
         {
             Body = body;
+        }
+        public ElseStatement(ISourceFilePart span, BlockStatement body, Scope scope) : base(span, scope)
+        {
+            Body = body;
+        }
+        public ElseStatement(ElseStatement statement, BlockStatement body, Scope scope) 
+            : this(statement.FilePart, body, scope)
+        {
         }
     }
 }

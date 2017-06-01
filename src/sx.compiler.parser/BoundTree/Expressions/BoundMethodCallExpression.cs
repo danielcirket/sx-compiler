@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using Sx.Compiler.Abstractions;
+﻿using Sx.Compiler.Parser.Syntax.Expressions;
 
 namespace Sx.Compiler.Parser.BoundTree.Expressions
 {
     public class BoundMethodCallExpression : BoundExpression
     {
-        public BoundMethodCallExpression()
+        public BoundMethodCallExpression(MethodCallExpression expression)
+            : base(expression)
         {
         }
     }

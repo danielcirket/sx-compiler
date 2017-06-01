@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Sx.Compiler.Parser.Types.Primitives
+﻿namespace Sx.Compiler.Parser.Types.Primitives
 {
-    class Boolean
+    public class Boolean : Type
     {
+        public override string Name => "bool";
+        public override string FullName => Name;
     }
 }

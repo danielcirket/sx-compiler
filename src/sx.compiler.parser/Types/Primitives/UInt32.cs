@@ -4,7 +4,9 @@ using System.Text;
 
 namespace Sx.Compiler.Parser.Types.Primitives
 {
-    class UInt32
+    public class UInt32 : Type
     {
+        public override string Name => "UInt32";
+        public override string FullName => Name;
     }
 }

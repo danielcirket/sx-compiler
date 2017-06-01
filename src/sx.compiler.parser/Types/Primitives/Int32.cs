@@ -4,7 +4,9 @@ using System.Text;
 
 namespace Sx.Compiler.Parser.Types.Primitives
 {
-    class Int32
+    public class Int32 : Type
     {
+        public override string Name => "Int32";
+        public override string FullName => Name;
     }
 }

@@ -398,7 +398,7 @@ namespace Sx.Compiler.Samples.Parser
 
         protected override void VisitCompilationUnit(CompilationUnit compilationUnit)
         {
-            foreach (var item in compilationUnit.Asts)
+            foreach (var item in compilationUnit.Children)
                 Visit(item);
         }
 

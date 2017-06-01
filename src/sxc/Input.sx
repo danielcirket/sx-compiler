@@ -1,36 +1,111 @@
-﻿module Sx.Test
+﻿import Sx.AnotherTest;
+
+module Sx.Test
 {
 	public class Program
 	{
-		//int _intField = 1;
-		//private T _genericField = MethodCall();
-
-
-		//public int TestIntProp { get { return 1; } }
-		//public string TestStringProp { get { return "string constant"; } private set { _value = value; } }
-		//protected SomeType TestGetSet { get; set; }
-		//protected string TestExpressionPropNoLambda => _intField + _intField2;
-		//private string TestExpressionPropNoLambda2 => _intField2;
-		//public T TestExpressionProp3 => _genericField;
-		//public string TestExpressionProp3 => "Test Return For Property";
-		//public int TestExpressionBodiedMemberProperty
-		//{
-		//	get => _intField;
-		//	set => _intField = value;
-		//}
-		//
-		//public string MethodWithExpressionBody(int parameter) => AnotherMethod(parameter);
-		//public string MethodWithGenericTypeArguments<T4>(T4 arg)
-		//{
-		//	
-		//}
+		private int _intField = 1;
+		private int value = 1;
+		private A _a;
 		
 		public constructor(int value)
 		{
-			value = 1;
-			unknownValue = -1;
+			_intField = value;
+			
+			// NOTE(Dan): This should resolve against its own module class A
+			// TODO(Dan): Need to implement this for declaration checking!
+			//var result = new Sx.AnotherTest.B(1);
+			//var result2 = AnotherTest.Create().Add(2);
+			
+			// TODO(Dan): Need to implement this for declaration checking!
+			//_a = _a.Value;
+			
+			//var test = TestModuleLevelMethod();
+			
+			//var blah = Create().Value.Method();
+			
+			//var test = _intField + _intFieldX;
+			
+			var x = value[0];
+			
+			var y = _a || 1;
+			
+			var z = _a << 1;
+			
+			for(var i = 0; i < 10; i++)
+			{
+				
+			}
+		
+			while(true)
+			{
+				
+			}
+			
+			do
+			{
+			} while(true);
+			
+			for(;;)
+			{
+			}
 		}
+		
+	}
+	
+	public class A
+	{
+		private int _value;		
+		public int Value => _value;
+		
+		public int Add(int a)
+		{
+			return _value + 2;
+		}
+		
+		public constructor(int value)
+		{
+			_value = _value;
+		}
+	}
+	
+	public string TestModuleLevelMethod()
+	{
+		if (true)
+		{
+		}
+		else if (true)
+		{
+		}
+		else
+		{
+		}
+		
+		return "This is a test!";
+	}
+}
 
-		public constructor(int value) {}
+module Sx.AnotherTest
+{
+	public class A
+	{
+		private int _value;
+		
+		public int Value => _value;
+		
+		public int Add(int a)
+		{
+			return _value + 2;
+		}
+		
+		public constructor(int value)
+		{
+			_value = value;
+		}
+	}
+	
+	public A Create()
+	{
+		return new A(1);
 	}
 }

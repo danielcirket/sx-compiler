@@ -2,6 +2,7 @@
 using Sx.Compiler.Parser.BoundTree.Expressions;
 using Sx.Compiler.Parser.BoundTree.Statements;
 using Sx.Compiler.Parser.Syntax;
+using Sx.Compiler.Parser.Syntax.Expressions;
 
 namespace Sx.Compiler.Parser.BoundTree
 {
@@ -31,7 +32,7 @@ namespace Sx.Compiler.Parser.BoundTree
 
         protected void VisitExpression(BoundExpression expression)
         {
-            switch (expression.Kind)
+            switch (expression.SyntaxNode.Kind)
             {
                 case SyntaxKind.ArrayAccessExpression:
                     VisitArrayAccess(expression as BoundArrayAccessExpression);
@@ -74,47 +75,47 @@ namespace Sx.Compiler.Parser.BoundTree
         {
             switch (expression.Operator)
             {
-                case BinaryOperator.Add:
-                case BinaryOperator.Div:
-                case BinaryOperator.Mod:
-                case BinaryOperator.Sub:
-                case BinaryOperator.Mul:
+                case BoundBinaryOperator.Add:
+                case BoundBinaryOperator.Div:
+                case BoundBinaryOperator.Mod:
+                case BoundBinaryOperator.Sub:
+                case BoundBinaryOperator.Mul:
                     VisitArithmetic(expression);
                     break;
 
-                case BinaryOperator.Assign:
-                case BinaryOperator.AddAssign:
-                case BinaryOperator.AndAssign:
-                case BinaryOperator.DivAssign:
-                case BinaryOperator.ModAssign:
-                case BinaryOperator.MulAssign:
-                case BinaryOperator.OrAssign:
-                case BinaryOperator.SubAssign:
-                case BinaryOperator.XorAssign:
+                case BoundBinaryOperator.Assign:
+                case BoundBinaryOperator.AddAssign:
+                case BoundBinaryOperator.AndAssign:
+                case BoundBinaryOperator.DivAssign:
+                case BoundBinaryOperator.ModAssign:
+                case BoundBinaryOperator.MulAssign:
+                case BoundBinaryOperator.OrAssign:
+                case BoundBinaryOperator.SubAssign:
+                case BoundBinaryOperator.XorAssign:
                     VisitAssignment(expression);
                     break;
 
-                case BinaryOperator.Equal:
-                case BinaryOperator.GreaterThan:
-                case BinaryOperator.GreaterThanOrEqual:
-                case BinaryOperator.LessThan:
-                case BinaryOperator.LessThanOrEqual:
-                case BinaryOperator.LogicalAnd:
-                case BinaryOperator.LogicalOr:
-                case BinaryOperator.NotEqual:
+                case BoundBinaryOperator.Equal:
+                case BoundBinaryOperator.GreaterThan:
+                case BoundBinaryOperator.GreaterThanOrEqual:
+                case BoundBinaryOperator.LessThan:
+                case BoundBinaryOperator.LessThanOrEqual:
+                case BoundBinaryOperator.LogicalAnd:
+                case BoundBinaryOperator.LogicalOr:
+                case BoundBinaryOperator.NotEqual:
                     VisitLogical(expression);
                     break;
 
-                case BinaryOperator.BitwiseAnd:
-                case BinaryOperator.BitwiseOr:
-                case BinaryOperator.BitwiseXor:
+                case BoundBinaryOperator.BitwiseAnd:
+                case BoundBinaryOperator.BitwiseOr:
+                case BoundBinaryOperator.BitwiseXor:
                     VisitBitwise(expression);
                     break;
             }
         }
         protected void VisitStatement(BoundStatement statement)
         {
-            switch (statement.Kind)
+            switch (statement.SyntaxNode.Kind)
             {
                 case SyntaxKind.ImportStatement:
                     VisitImport(statement as BoundImportStatement);
@@ -167,7 +168,7 @@ namespace Sx.Compiler.Parser.BoundTree
         }
         protected void VisitDeclaration(BoundDeclaration node)
         {
-            switch (node.Kind)
+            switch (node.SyntaxNode.Kind)
             {
                 case SyntaxKind.ModuleDeclaration:
                     VisitModuleDeclaration(node as BoundModuleDeclaration);
@@ -208,10 +209,10 @@ namespace Sx.Compiler.Parser.BoundTree
         }
         protected void VisitDocument(BoundSourceDocument sourceDocument)
         {
-            foreach (var node in sourceDocument.Children)
-            {
-                Visit(node);
-            }
+            //foreach (var node in sourceDocument.Children)
+            //{
+            //    Visit(node);
+            //}
         }
 
         protected abstract void VisitArithmetic(BoundBinaryExpression expression);

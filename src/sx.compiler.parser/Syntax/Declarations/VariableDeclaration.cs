@@ -1,4 +1,5 @@
 ﻿using Sx.Compiler.Abstractions;
+using Sx.Compiler.Parser.Semantics;
 using Sx.Compiler.Parser.Syntax.Expressions;
 
 namespace Sx.Compiler.Parser.Syntax.Declarations
@@ -13,6 +14,21 @@ namespace Sx.Compiler.Parser.Syntax.Declarations
         {
             Type = type;
             Value = value;
+        }
+        public VariableDeclaration(ISourceFilePart span, string name, TypeDeclaration type, Expression value, Scope scope) : base(span, name, scope)
+        {
+            Type = type;
+            Value = value;
+        }
+        public VariableDeclaration(VariableDeclaration declaration, Scope scope)
+            : this(declaration.FilePart, declaration.Name, declaration.Type, declaration.Value, scope)
+        {
+
+        }
+        public VariableDeclaration(VariableDeclaration declaration, Expression value, Scope scope)
+            : this(declaration.FilePart, declaration.Name, declaration.Type, value, scope)
+        {
+
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Sx.Compiler.Samples.Parser
             var astPrinter = new AstPrintVisitor();
 
             if (compilationUnit != null)
-                foreach (var node in compilationUnit.Asts)
+                foreach (var node in compilationUnit.Children)
                     astPrinter.Visit(node);
 
             if (parser.ErrorSink.HasErrors)

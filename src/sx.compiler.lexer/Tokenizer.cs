@@ -103,7 +103,7 @@ namespace Sx.Lexer
             _sourceFileLocation = endSourceLocation;
             _builder.Clear();
 
-            return new Token(tokenType, content, startSourceLocation, endSourceLocation);
+            return new Token(tokenType,_sourceFile.Name, content, startSourceLocation, endSourceLocation);
         }
         private char Peek(int ahead)
         {
@@ -575,7 +575,7 @@ namespace Sx.Lexer
         }
         private void AddError(string message, Severity severity)
         {
-            var sourcePart = new SourceFilePart(_sourceFileLocation, new SourceFileLocation(_column, _index, _line), _builder.ToString().Split('\n'));
+            var sourcePart = new SourceFilePart(_sourceFile.Name, _sourceFileLocation, new SourceFileLocation(_column, _index, _line), _builder.ToString().Split('\n'));
             _errorSink.AddError(message, sourcePart, severity);
         }
         private bool IsEOF()

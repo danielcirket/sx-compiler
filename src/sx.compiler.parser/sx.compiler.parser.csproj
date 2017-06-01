@@ -12,13 +12,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\sx.compiler.abstractions\sx.compiler.abstractions.csproj" />
-    <ProjectReference Include="..\sx.compiler.lexer.abstractions\sx.compiler.lexer.abstractions.csproj" />
-    <ProjectReference Include="..\sx.compiler.lexer\sx.compiler.lexer.csproj" />
+    <Compile Remove="BoundTree\**" />
+    <EmbeddedResource Remove="BoundTree\**" />
+    <None Remove="BoundTree\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="BoundTree\" />
+    <Compile Remove="Semantics\Passes\Types\TypeCheckPass.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\sx.compiler.abstractions\sx.compiler.abstractions.csproj" />
+    <ProjectReference Include="..\sx.compiler.lexer.abstractions\sx.compiler.lexer.abstractions.csproj" />
+    <ProjectReference Include="..\sx.compiler.lexer\sx.compiler.lexer.csproj" />
   </ItemGroup>
 
 </Project>

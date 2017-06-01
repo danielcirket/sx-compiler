@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Sx.Compiler.Parser.BoundTree.Expressions
 {
-    public enum BinaryOperator
+    public enum BoundBinaryOperator
     {
         #region Assignment
 

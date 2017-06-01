@@ -380,10 +380,31 @@ namespace Sx.Compiler.Parser
                 }
                 TakeSemicolon();
 
-                condition = ParseLogicalExpression();
+                if (_current.TokenType == TokenType.Semicolon)
+                {
+                    condition = new BinaryExpression(
+                        _current.SourceFilePart, 
+                        new ConstantExpression(_current.SourceFilePart, "1", ConstantKind.Integer), 
+                        new ConstantExpression(_current.SourceFilePart, "1", ConstantKind.Integer),
+                        BinaryOperator.Equal);
+                }
+                else
+                {
+                    condition = ParseLogicalExpression();
+                }
+
                 TakeSemicolon();
 
-                increment = ParseExpression();
+                if (_current.TokenType == TokenType.RightParenthesis)
+                {
+
+                }
+                else
+                {
+                    increment = ParseExpression();
+                }
+
+                
             }, TokenType.LeftParenthesis, TokenType.RightParenthesis);
 
             var block = ParseStatementOrScope();
@@ -419,7 +440,7 @@ namespace Sx.Compiler.Parser
         }
         private BlockStatement ParseScope()
         {
-            List<SyntaxNode> contents = new List<SyntaxNode>();
+            var contents = new List<SyntaxNode>();
             var start = _current;
             MakeBlock(() =>
             {
@@ -442,11 +463,10 @@ namespace Sx.Compiler.Parser
         }
         private SwitchStatement ParseSwitchStatement()
         {
-            List<CaseStatement> cases = new List<CaseStatement>();
-
+            var cases = new List<CaseStatement>();
             var start = TakeKeyword("switch");
 
-            Expression expr;
+            Expression expr = null;
             MakeBlock(() => expr = ParseExpression(), TokenType.LeftParenthesis, TokenType.RightParenthesis);
             MakeBlock(() =>
             {
@@ -456,14 +476,12 @@ namespace Sx.Compiler.Parser
                 }
             });
 
-            return new SwitchStatement(CreateSpan(start), cases);
+            return new SwitchStatement(CreateSpan(start), expr, cases);
         }
         private WhileStatement ParseWhileStatement()
         {
             var start = TakeKeyword("while");
-
-            Expression expr = ParsePredicate();
-
+            var expr = ParsePredicate();
             var body = ParseStatementOrScope();
 
             return new WhileStatement(CreateSpan(start), false, expr, body);
@@ -1108,7 +1126,8 @@ namespace Sx.Compiler.Parser
             var start = Take("module");
 
             var moduleNameParts = new List<IdentifierExpression>();
-            var contents = new List<Declaration>();
+            var classes = new List<ClassDeclaration>();
+            var methods = new List<MethodDeclaration>();
 
             while (_current.TokenType == TokenType.Identifier)
             {
@@ -1129,19 +1148,19 @@ namespace Sx.Compiler.Parser
 
                     if (_current.Value == "class")
                     {
-                        contents.Add(ParseClassDeclaration(visibility.Value));
+                        classes.Add(ParseClassDeclaration(visibility.Value));
                     }
                     else
                     {
                         var returnType = ParseTypeDeclaration();
                         var name = ParseName();
-                        contents.Add(ParseMethodDeclaration(visibility.Value, name, returnType));
+                        methods.Add(ParseMethodDeclaration(visibility.Value, name, returnType));
                     }
 
                 }
             });
 
-            return new ModuleDeclaration(CreateSpan(start.SourceFilePart.Start), string.Join(".", moduleNameParts.Select(identifier => identifier.Identifier)), contents);
+            return new ModuleDeclaration(CreateSpan(start.SourceFilePart.Start), string.Join(".", moduleNameParts.Select(identifier => identifier.Identifier)), classes, methods);
         }
         private ClassDeclaration ParseClassDeclaration(DeclarationVisibility visibility)
         {
@@ -1160,22 +1179,22 @@ namespace Sx.Compiler.Parser
             MakeBlock(() =>
             {
                 var member = ParseClassMember();
-                switch (member?.Kind)
+                switch (member)
                 {
-                    case SyntaxKind.PropertyDeclaration:
-                        props.Add(member as PropertyDeclaration);
+                    case PropertyDeclaration property:
+                        props.Add(property);
                         break;
 
-                    case SyntaxKind.FieldDeclaration:
-                        fields.Add(member as FieldDeclaration);
+                    case FieldDeclaration field:
+                        fields.Add(field);
                         break;
 
-                    case SyntaxKind.MethodDeclaration:
-                        methods.Add(member as MethodDeclaration);
+                    case MethodDeclaration method:
+                        methods.Add(method);
                         break;
 
-                    case SyntaxKind.ConstructorDeclaration:
-                        ctors.Add(member as ConstructorDeclaration);
+                    case ConstructorDeclaration constructor:
+                        ctors.Add(constructor);
                         break;
                 }
             });
@@ -1222,18 +1241,19 @@ namespace Sx.Compiler.Parser
         }
         private SourceDocument ParseDocument()
         {
-            List<SyntaxNode> contents = new List<SyntaxNode>();
+            var imports = new List<ImportStatement>();
+            var modules = new List<ModuleDeclaration>();
 
             var start = _current.SourceFilePart.Start;
 
             while (_current.Value == "import")
             {
-                contents.Add(ParseImportStatement());
+                imports.Add(ParseImportStatement());
             }
 
             while (_current.Value == "module")
             {
-                contents.Add(ParseModuleDeclaration());
+                modules.Add(ParseModuleDeclaration());
             }
 
             if (_current.TokenType != TokenType.EOF)
@@ -1242,7 +1262,7 @@ namespace Sx.Compiler.Parser
                 AddError(Severity.Error, "Top-level statements are not permitted. Statements must be part of a module except for import statements which are at the top of the file", CreateSpan(_current.SourceFilePart.Start, _tokens.Last().SourceFilePart.End));
             }
 
-            return new SourceDocument(CreateSpan(start), _sourceFile, contents);
+            return new SourceDocument(CreateSpan(start), _sourceFile, imports, modules);
         }
         private FieldDeclaration ParseFieldDeclaration(DeclarationVisibility visibility, string name, TypeDeclaration type)
         {
@@ -1553,7 +1573,8 @@ namespace Sx.Compiler.Parser
 
         private ISourceFilePart CreateSpan(ISourceFileLocation start, ISourceFileLocation end)
         {
-            return new SourceFilePart(start, end);
+            var content = _sourceFile.Lines.Skip(start.Line - 1).Take(end.Line - 1).ToArray();
+            return new SourceFilePart(_sourceFile.Name, content, start, end);
         }
         private ISourceFilePart CreateSpan(IToken start)
         {

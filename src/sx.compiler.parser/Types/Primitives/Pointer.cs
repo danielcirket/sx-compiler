@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Sx.Compiler.Parser.Types.Primitives
+﻿namespace Sx.Compiler.Parser.Types.Primitives
 {
-    class Pointer
+    public class Pointer<T> : Type
     {
+        public override string Name => "Pointer";
+        public override string FullName => Name;
+        public Type Type { get; }
     }
 }

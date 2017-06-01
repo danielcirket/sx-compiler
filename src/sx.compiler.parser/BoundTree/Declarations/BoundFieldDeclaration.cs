@@ -1,9 +1,16 @@
-﻿namespace Sx.Compiler.Parser.BoundTree.Declarations
+﻿using Sx.Compiler.Parser.Semantics;
+using Sx.Compiler.Parser.Syntax.Declarations;
+
+namespace Sx.Compiler.Parser.BoundTree.Declarations
 {
     public class BoundFieldDeclaration : BoundDeclaration
     {
-        public BoundFieldDeclaration()
+        public SymbolTable SymbolTable { get; }
+
+        public BoundFieldDeclaration(FieldDeclaration fieldDeclaration, SymbolTable symbolTable)
+            : base(fieldDeclaration.Name, fieldDeclaration)
         {
+            SymbolTable = symbolTable;
         }
     }
 }
